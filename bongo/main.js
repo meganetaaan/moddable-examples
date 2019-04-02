@@ -31,7 +31,7 @@ let playing = {
 }
 
 speaker.callback = function(stream) {
-  trace('callback\n');
+  trace(`stop: ${stream}\n`);
   playing[stream] = false;
 };
 
@@ -40,13 +40,15 @@ function playSound(key, stream) {
   if (sound != null) {
     const speaker = global.speaker;
     if (playing[stream]) {
-      trace('interrupt\n');
+      trace(`interrupt: ${stream}\n`);
       return;
     }
+    trace(`queue_s: ${stream}\n`);
     playing[stream] = true;
     speaker.enqueue(stream, AudioOut.Flush);
     speaker.enqueue(stream, AudioOut.Samples, sound);
     speaker.enqueue(stream, AudioOut.Callback, stream);
+    trace(`queue_e: ${stream}\n`);
   }
 }
 
@@ -107,7 +109,7 @@ const application = new Application(null, {
       top: 77,
       left: 78,
       Skin: HandsSkin,
-      state: 0,
+      state: 1,
       variant: 0
     }),
     new Content(null, {
@@ -115,9 +117,9 @@ const application = new Application(null, {
       top: 103,
       left: 190,
       Skin: HandsSkin,
-      state: 1,
+      state: 0,
       variant: 0
-    })
+    }),
   ]
 })
 
@@ -138,7 +140,7 @@ buttonC.onChanged = function() {
   application.content('leftHand').variant = up ? 0 : 1;
   // play sound
   if(up === 0) {
-    playSound('high', 1)
+    playSound('high', 0)
   }
 }
 
