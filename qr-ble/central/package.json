@@ -1,0 +1,11 @@
+{
+  "name": "moddable-examples-qr-ble-central",
+  "private": true,
+  "author": "Shinya Ishikawa",
+  "scripts": {
+    "start": "http-server"
+  },
+  "devDependencies": {
+    "http-server": "^0.11.1"
+  }
+}

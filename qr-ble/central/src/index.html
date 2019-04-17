@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>QR-BLE</title>
+</head>
+
+<body>
+    <h1>QR-BLE Example</h1>
+    <h2>BLE Status</h2>
+    <div class="qr-ble-status"></div>
+    <h2>QR Value</h2>
+    <input type="button" class="qr-connect-button" value="connect">
+    <form class="qr-form" action="">
+        <input class="qr-text" type="text" name="qr-value" id="url">
+        <input class="qr-send-button" type="button" value="send">
+    </form>
+    <script>
+        (function () {
+            const DEVICE_NAME = 'M5Stack'
+            const SERVICE_UUID = '6b0d0503-dcaa-4041-8ab4-630d7d9017dc'
+            const CHARACTERISTIC_UUID = 'bea0c847-4238-40d2-b693-4dadab33395e'
+            // https://developers.google.com/web/updates/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
+
+            let state = {
+                isConnected: false,
+                connectedCharacteristic: null
+            }
+            async function sendQRText(text) {
+                const encoder = new TextEncoder('utf-8')
+                if (!state.isConnected) {
+                    return
+                }
+                const characteristic = state.connectedCharacteristic
+                const buf = encoder.encode(text)
+                const PACKET_LENGTH = 18
+                let idx = 0
+                while(true) {
+                    const subBuf = buf.slice(idx, idx + PACKET_LENGTH)
+                    if (subBuf.length === 0) {
+                        break;
+                    }
+                    try {
+                        await characteristic.writeValue(subBuf)
+                    } catch(e) {
+                        console.error(e)
+                    }
+                    idx += PACKET_LENGTH
+                }
+                await characteristic.writeValue(encoder.encode('\r'))
+            }
+            async function connect() {
+                const device = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: false,
+                    filters: [
+                        { name: DEVICE_NAME },
+                        { services: [SERVICE_UUID] }
+                    ]
+                })
+                device.addEventListener('gattserverdisconnected', () => {
+                    state.isConnected = false
+                    document.querySelector('.qr-ble-status').innerText = 'disconnected'
+                    state.connectedCharacteristic = null
+                    console.log('disconnected')
+                })
+                const server = await device.gatt.connect()
+                const service = await server.getPrimaryService(SERVICE_UUID)
+                const characteristic = await service.getCharacteristic(CHARACTERISTIC_UUID)
+                state.isConnected = true
+                state.connectedCharacteristic = characteristic
+                document.querySelector('.qr-ble-status').innerText = 'connected'
+                console.log('connected')
+            }
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelector('.qr-connect-button').addEventListener('click', connect);
+                const qrForm = document.querySelector('.qr-form')
+                qrForm.addEventListener('submit', (event) => {
+                    event.preventDefault()
+                    if (!state.isConnected) {
+                        return
+                    }
+                    const qrText = document.querySelector('.qr-text').value
+                    if (qrText == null || qrText.length === 0) {
+                        return
+                    }
+                    sendQRText(qrText)
+                })
+            })
+        })();
+    </script>
+</body>
+
+</html>
