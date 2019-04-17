@@ -82,6 +82,12 @@ const BongoSkin = Skin.template({
   height: 111
 });
 
+const label = new Label(null, {
+  top: 5, left: 5,
+  style: new Style({ font:"600 28px Open Sans", color: "white" }),
+  string: '@meganetaaan'
+});
+
 const application = new Application(null, {
   skin: new Skin({ fill: 'blue' }),
   top: 0,
@@ -120,6 +126,7 @@ const application = new Application(null, {
       state: 0,
       variant: 0
     }),
+    label
   ]
 })
 
