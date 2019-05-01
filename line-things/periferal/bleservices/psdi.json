@@ -1,0 +1,14 @@
+{
+    "service": {
+        "uuid": "E625601E-9E55-4597-A598-76018A0D293D",
+        "characteristics": {
+            "value": {
+                "uuid": "26E2B12B-85F0-4F3F-9FDD-91D114270E6E",
+                "maxBytes": 8,
+                "type": "Uint8",
+                "properties": "read",
+                "permissions": "readEncrypted"
+            }
+        }
+    }
+}

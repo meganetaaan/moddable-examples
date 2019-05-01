@@ -1,0 +1,20 @@
+{
+	"include": [
+		"$(MODDABLE)/examples/manifest_base.json",
+		"$(MODDABLE)/examples/manifest_commodetto.json",
+		"$(MODDABLE)/modules/network/ble/manifest_server.json"
+	],
+	"modules": {
+		"*": [
+			"$(MODULES)/data/hex/*",
+			"./qr-server",
+			"./main"
+		]
+	},
+	"preload": [],
+	"ble": {
+		"*": [
+			"./bleservices/*"
+		]
+	}
+}
