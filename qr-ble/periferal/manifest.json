@@ -14,7 +14,7 @@
 		]
 	},
 	"preload": [
-		"qrcode", "draw-qr", "qr-server"
+		"hex", "qrcode", "draw-qr", "qr-server"
 	],
 	"ble": {
 		"*": [

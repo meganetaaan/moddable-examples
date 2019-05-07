@@ -11,35 +11,57 @@
  *   Mountain View, CA 94042, USA.
  *
  */
-import qrCode from "qrcode";
+import qrCode from 'qrcode'
 
 // render QR code to screen
 // let render = new Poco(screen);
 
 // generate QR code
-function drawQR(str, render) {
-	let qr = qrCode({input: str, maxVersion: 4});
-	let size = qr.size;
-	qr = new Uint8Array(qr);
+function drawQR (str, render) {
+  let qr = qrCode({ input: str, maxVersion: 4 })
+  let size = qr.size
+  qr = new Uint8Array(qr)
 
-	render.begin();
-	render.fillRectangle(render.makeColor(255, 255, 255), 0, 0, render.width, render.height);
-	render.end();
+  render.begin()
+  render.fillRectangle(
+    render.makeColor(255, 255, 255),
+    0,
+    0,
+    render.width,
+    render.height
+  )
+  render.end()
 
-	let margin = 10;
-	let available = Math.min(render.width - (margin * 2), render.height - (margin * 2));
-	let pixels = Math.floor(available / size);
-	margin += (available - (pixels * size)) >> 1;
+  let margin = 10
+  let available = Math.min(
+    render.width - margin * 2,
+    render.height - margin * 2
+  )
+  let pixels = Math.floor(available / size)
+  margin += (available - pixels * size) >> 1
 
-	for (let y = 0; y < size; y++) {
-		render.begin(margin, margin + (y * pixels), size * pixels, pixels);
-		render.fillRectangle(render.makeColor(255, 255, 255), 0, 0, render.width, render.height);
-		for (let x = 0; x < size; x++) {
-			if (qr[(y * size) + x])
-				render.fillRectangle(render.makeColor(20, 20, 20), margin + (x * pixels), margin + (y * pixels), pixels, pixels);
-		}
-		render.end();
-	}
+  for (let y = 0; y < size; y++) {
+    render.begin(margin, margin + y * pixels, size * pixels, pixels)
+    render.fillRectangle(
+      render.makeColor(255, 255, 255),
+      0,
+      0,
+      render.width,
+      render.height
+    )
+    for (let x = 0; x < size; x++) {
+      if (qr[y * size + x]) {
+        render.fillRectangle(
+          render.makeColor(20, 20, 20),
+          margin + x * pixels,
+          margin + y * pixels,
+          pixels,
+          pixels
+        )
+      }
+    }
+    render.end()
+  }
 }
 
 export default drawQR

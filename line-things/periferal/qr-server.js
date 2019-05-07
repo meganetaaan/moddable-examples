@@ -12,67 +12,68 @@
  *
  */
 
-import BLEServer from "bleserver";
-import { uuid } from "btutils";
-import { IOCapability } from "sm";
-import Hex from "hex";
+/* global trace */
+
+import BLEServer from 'bleserver'
+import { uuid } from 'btutils'
+import { IOCapability } from 'sm'
+import Hex from 'hex'
 // import UUID from "uuid";
 
-const DEVICE_NAME = "M5Stack";
+const DEVICE_NAME = 'M5Stack'
 const SERVICE_UUID_LIST = [
-	"91E4E176-D0B9-464D-9FE4-52EE3E9F1552",
-	"E625601E-9E55-4597-A598-76018A0D293D"
-];
-const MAC_ADDRESS = "80:7D:3A:C8:08:CA:00:00";
-const SEPARATOR = ":";
+  '91E4E176-D0B9-464D-9FE4-52EE3E9F1552',
+  'E625601E-9E55-4597-A598-76018A0D293D'
+]
+const MAC_ADDRESS = '80:7D:3A:C8:08:CA:00:00'
+const SEPARATOR = ':'
 
 class QRServer extends BLEServer {
-	onReady() {
-		this.qr = "";
-		this.deviceName = DEVICE_NAME;
-		this.securityParameters = {
-			encryption: true,
-			mitm: false,
-			bonding: true,
-			ioCapability: IOCapability.NoInputNoOutput
-		};
-		this.onDisconnected();
-	}
-	onConnected(connection) {
-		this.stopAdvertising();
-	}
-	onDisconnected(connection) {
-		this.startAdvertising({
-			advertisingData: {
-				flags: 6,
-				completeName: DEVICE_NAME,
-				completeUUID128List: [uuid(SERVICE_UUID_LIST)]
-			}
-		});
-	}
-	onCharacteristicRead(params) {
-		trace(params.name);
-		debugger;
-		if (params.name === 'value') {
-			const value = Hex.toBuffer(MAC_ADDRESS, SEPARATOR);
-			trace(Hex.toString(value));
-			return value;
-		}
-		return 0;
-	}
-	onCharacteristicWritten(params) {
-		let value = params.value;
-		if ("write" == params.name) {
-			const strValue = String.fromArrayBuffer(value);
-			if (strValue === "\r") {
-				if (typeof this.onQRChange === "function") {
-					this.onQRChange(this.qr);
-				}
-				this.qr = "";
-			}
-			this.qr += strValue;
-		}
-	}
+  onReady () {
+    this.qr = ''
+    this.deviceName = DEVICE_NAME
+    this.securityParameters = {
+      encryption: true,
+      mitm: false,
+      bonding: true,
+      ioCapability: IOCapability.NoInputNoOutput
+    }
+    this.onDisconnected()
+  }
+  onConnected (connection) {
+    this.stopAdvertising()
+  }
+  onDisconnected (connection) {
+    this.startAdvertising({
+      advertisingData: {
+        flags: 6,
+        completeName: DEVICE_NAME,
+        completeUUID128List: [uuid(SERVICE_UUID_LIST)]
+      }
+    })
+  }
+  onCharacteristicRead (params) {
+    trace(params.name)
+    if (params.name === 'value') {
+      const value = Hex.toBuffer(MAC_ADDRESS, SEPARATOR)
+      trace(Hex.toString(value))
+      return value
+    }
+    return 0
+  }
+  onCharacteristicWritten (params) {
+    let value = params.value
+    if (params.name === 'write') {
+      const strValue = String.fromArrayBuffer(value)
+      if (strValue === '\r') {
+        if (typeof this.onQRChange === 'function') {
+          this.onQRChange(this.qr)
+        }
+        this.qr = ''
+      }
+      this.qr += strValue
+    }
+  }
 }
 
-export default QRServer;
+export default QRServer

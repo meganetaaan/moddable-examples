@@ -2,7 +2,7 @@
  * Copyright (c) 2016-2018  Moddable Tech, Inc.
  *
  *   This file is part of the Moddable SDK.
- * 
+ *
  *   This work is licensed under the
  *       Creative Commons Attribution 4.0 International License.
  *   To view a copy of this license, visit
@@ -12,12 +12,12 @@
  *
  */
 
+/* global trace */
+
 import QRServer from './qr-server'
-import Poco from "commodetto/Poco";
 
-const render = new Poco(screen);
-const qrServer = new QRServer
+const qrServer = new QRServer()
 
-qrServer.onQRChange = qr => {
-	trace(qr)
+qrServer.onQRChange = (qr) => {
+  trace(qr)
 }
