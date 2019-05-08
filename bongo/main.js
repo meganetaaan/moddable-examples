@@ -20,7 +20,8 @@ import AudioOut from 'pins/i2s'
 
 const sounds = {
   high: new Resource('bongo_high.maud'),
-  low: new Resource('bongo_low.maud')
+  low: new Resource('bongo_low.maud'),
+  meow: new Resource('meow.maud')
 }
 
 const speaker = global.speaker
@@ -43,7 +44,7 @@ const DeskSkin = Skin.template({
   height: 240
 })
 
-const catTexture = new Texture('cat.png')
+const catTexture = new Texture('cat_face.png')
 const CatSkin = Skin.template({
   texture: catTexture,
   width: 225,
@@ -57,6 +58,15 @@ const HandsSkin = Skin.template({
   height: 58,
   states: 58,
   variants: 45
+})
+
+const mouthTexture = new Texture('cat_mouth.png')
+const MouthSkin = Skin.template({
+  texture: mouthTexture,
+  width: 28,
+  height: 16,
+  states: 16,
+  variants: 28
 })
 
 const bongoTexture = new Texture('bongo.png')
@@ -111,11 +121,20 @@ const application = new Application(null, {
       state: 0,
       variant: 0
     }),
+    new Content(null, {
+      name: 'mouth',
+      top: 100,
+      left: 148,
+      Skin: MouthSkin,
+      state: 0,
+      variant: 0
+    }),
     label
   ]
 })
 
 const buttonA = global.button.a
+const buttonB = global.button.b
 const buttonC = global.button.c
 buttonA.onChanged = function () {
   const up = this.read()
@@ -124,6 +143,13 @@ buttonA.onChanged = function () {
   // play sound
   if (up === 0) {
     playSound('low', 0)
+  }
+}
+buttonB.onChanged = function () {
+  const up = this.read()
+  application.content('mouth').state = up ? 0 : 1
+  if (up === 0) {
+    playSound('meow', 2)
   }
 }
 buttonC.onChanged = function () {
