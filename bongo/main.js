@@ -123,7 +123,7 @@ const application = new Application(null, {
     }),
     new Content(null, {
       name: 'mouth',
-      top: 100,
+      top: 102,
       left: 148,
       Skin: MouthSkin,
       state: 0,
