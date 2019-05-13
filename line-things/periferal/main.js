@@ -17,4 +17,13 @@
 import LineThingsServer from './line-things-server'
 
 const server = new LineThingsServer()
+const buttonA = global.button.a
+
+buttonA.onChanged = function () {
+  const value = this.read() === 1 ? 0 : 1
+  if (server.notifyCharacteristic != null) {
+    server.notifyValue(server.notifyCharacteristic, value)
+  }
+}
+
 trace(server)
