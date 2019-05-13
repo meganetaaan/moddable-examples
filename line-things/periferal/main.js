@@ -14,10 +14,7 @@
 
 /* global trace */
 
-import QRServer from './qr-server'
+import LineThingsServer from './line-things-server'
 
-const qrServer = new QRServer()
-
-qrServer.onQRChange = (qr) => {
-  trace(qr)
-}
+const server = new LineThingsServer()
+trace(server)

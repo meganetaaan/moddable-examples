@@ -28,7 +28,7 @@ const MAC_ADDRESS = '80:7D:3A:C8:08:CA:00:00'
 const SEPARATOR = ':'
 const uuidList = [uuid(SERVICE_UUID_LIST)]
 
-class QRServer extends BLEServer {
+class LineThingsServer extends BLEServer {
   onReady () {
     this.count = 0
     this.deviceName = DEVICE_NAME
@@ -76,4 +76,4 @@ class QRServer extends BLEServer {
   }
 }
 
-export default QRServer
+export default LineThingsServer
