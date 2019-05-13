@@ -5,14 +5,14 @@
       "write": {
         "uuid": "E9062E71-9E62-4BC6-B0D3-35CDCD9B027B",
         "maxBytes": 128,
-        "properties": "write,read",
+        "properties": "write",
         "permissions": "writeEncrypted,readEncrypted"
       },
       "notify": {
         "uuid": "62FBD229-6EDD-4D1A-B554-5C4E1BB29169",
         "maxBytes": 128,
-        "properties": "read",
-        "permissions": "readEncrypted"
+        "properties": "notify",
+        "permissions": "writeEncrypted,readEncrypted"
       }
     }
   }

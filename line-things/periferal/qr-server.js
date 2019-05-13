@@ -22,15 +22,15 @@ import Hex from 'hex'
 
 const DEVICE_NAME = 'M5Stack'
 const SERVICE_UUID_LIST = [
-  '91E4E176-D0B9-464D-9FE4-52EE3E9F1552',
-  'E625601E-9E55-4597-A598-76018A0D293D'
+  '91E4E176-D0B9-464D-9FE4-52EE3E9F1552'
 ]
 const MAC_ADDRESS = '80:7D:3A:C8:08:CA:00:00'
 const SEPARATOR = ':'
+const uuidList = [uuid(SERVICE_UUID_LIST)]
 
 class QRServer extends BLEServer {
   onReady () {
-    this.qr = ''
+    this.count = 0
     this.deviceName = DEVICE_NAME
     this.securityParameters = {
       encryption: true,
@@ -45,10 +45,17 @@ class QRServer extends BLEServer {
   }
   onDisconnected (connection) {
     this.startAdvertising({
+      fast: true,
+      connectable: true,
+      discoverable: true,
+      scanResponseData: {
+        flags: 6,
+        completeName: DEVICE_NAME
+      },
       advertisingData: {
         flags: 6,
         completeName: DEVICE_NAME,
-        completeUUID128List: [uuid(SERVICE_UUID_LIST)]
+        completeUUID128List: uuidList
       }
     })
   }
@@ -61,17 +68,10 @@ class QRServer extends BLEServer {
     }
     return 0
   }
-  onCharacteristicWritten (params) {
-    let value = params.value
+  onCharacteristicWritten (params, value) {
     if (params.name === 'write') {
-      const strValue = String.fromArrayBuffer(value)
-      if (strValue === '\r') {
-        if (typeof this.onQRChange === 'function') {
-          this.onQRChange(this.qr)
-        }
-        this.qr = ''
-      }
-      this.qr += strValue
+      this.count++
+      trace(this.count)
     }
   }
 }
