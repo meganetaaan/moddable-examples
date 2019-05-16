@@ -16,7 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const connectButton = document.querySelector('.ble-connect-button')
-  connectButton.addEventListener('click', bleClient.connect)
+  connectButton.addEventListener('click', async function () {
+    await bleClient.connect()
+  })
 
   const qrForm = document.querySelector('.qr-form')
   qrForm.addEventListener('submit', (event) => {

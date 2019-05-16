@@ -15,7 +15,7 @@
 import BLEServer from 'bleserver'
 import { uuid } from 'btutils'
 
-const DEVICE_NAME = 'M5Stack'
+const DEVICE_NAME = 'SendQR'
 const SERVICE_UUID = '6b0d0503-dcaa-4041-8ab4-630d7d9017dc' // sendqr service
 
 class QRServer extends BLEServer {
@@ -36,8 +36,7 @@ class QRServer extends BLEServer {
       }
     })
   }
-  onCharacteristicWritten (params) {
-    let value = params.value
+  onCharacteristicWritten (params, value) {
     if (params.name === 'qr') {
       const strValue = String.fromArrayBuffer(value)
       if (strValue === '\r') {

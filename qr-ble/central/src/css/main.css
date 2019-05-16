@@ -46,6 +46,10 @@ header {
     font-size: 0.7em;
 }
 
+.ble-status.connected:before {
+    content: "device connected";
+}
+
 .ble-status.disconnected:before {
     content: "device disconnected";
 }
