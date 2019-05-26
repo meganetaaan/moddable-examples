@@ -1,0 +1,52 @@
+{
+  "service": {
+    "uuid": "1812",
+    "characteristics": {
+      "hid_information": {
+        "uuid": "2A4A",
+        "type": "Uint8Array",
+        "maxBytes": 64,
+        "properties": "read",
+        "permissions": "read",
+        "value": ["0x00","0x01"]
+      },
+      "report_map": {
+        "uuid": "2A4B",
+        "type": "Uint8Array",
+        "maxBytes": 512,
+        "properties": "read",
+        "permissions": "readEncrypted"
+      },
+      "hid_control_point": {
+        "uuid": "2A4C",
+        "type": "Uint8Array",
+        "maxBytes": 64,
+        "properties": "writeNoResponse",
+        "permissions": "write"
+      },
+      "protocol_mode": {
+        "uuid": "2A4E",
+        "type": "Uint8Array",
+        "properties": "read,writeNoResponse",
+        "maxBytes": 64,
+        "permissions": "read,write"
+      },
+      "report": {
+        "uuid": "2A4D",
+        "type": "Uint8Array",
+        "properties": "read,notify",
+        "permissions": "readEncrypted,writeEncrypted",
+        "maxBytes": 512,
+        "descriptors": {
+          "reference": {
+            "uuid": "2908",
+            "maxBytes": 512,
+            "properties": "read,write",
+            "permissions": "read,write",
+            "type": "Uint8Array"
+          }
+        }
+      }
+    }
+  }
+}

@@ -24,6 +24,81 @@
 
 import { BLEHIDClient, ReportType, UsageID } from 'hidclient'
 
+const reportMap = [
+  0x05,
+  0x01, // USAGE_PAGE (Generic Desktop)
+  0x09,
+  0x06, // USAGE (Keyboard)
+  0xa1,
+  0x01, // COLLECTION (Application)
+  0x85,
+  0x01, //  REPORT_ID (1)
+
+  0x05,
+  0x07, //   USAGE_PAGE (usage = keyboard page)
+  // モデファイヤキー(修飾キー)
+  0x19,
+  0xe0, //     USAGE_MINIMUM (左CTRLが0xe0)
+  0x29,
+  0xe7, //     USAGE_MAXIMUM (右GUIが0xe7)
+  0x15,
+  0x00, //   LOGICAL_MINIMUM (0)
+  0x25,
+  0x01, //   LOGICAL_MAXIMUM (1)
+  0x95,
+  0x08, //   REPORT_COUNT (8) 全部で8つ(左右4つずつ)。
+  0x75,
+  0x01, //   REPORT_SIZE (1) 各修飾キーにつき1ビット
+  0x81,
+  0x02, //   INPUT (Data,Var,Abs) 8ビット長のInputフィールド(変数)が1つ。
+  // 予約フィールド
+  0x95,
+  0x01, //   REPORT_COUNT (1)
+  0x75,
+  0x08, //   REPORT_SIZE (8) 1ビットが8つ。
+  0x81,
+  0x01, //   INPUT (Cnst,Var,Abs)
+  // LED状態のアウトプット
+  0x95,
+  0x05, //   REPORT_COUNT (5) 全部で5つ。
+  0x75,
+  0x01, //   REPORT_SIZE (1)  各LEDにつき1ビット
+  0x05,
+  0x08, //   USAGE_PAGE (LEDs)
+  0x19,
+  0x01, //     USAGE_MINIMUM (1) (NumLock LEDが1)
+  0x29,
+  0x05, //     USAGE_MAXIMUM (5) (KANA LEDが5)
+  0x91,
+  0x02, //   OUTPUT (Data,Var,Abs) // LED report
+  // LEDレポートのパディング
+  0x95,
+  0x01, //   REPORT_COUNT (1)
+  0x75,
+  0x03, //   REPORT_SIZE (3) 残りの3ビットを埋める。
+  0x91,
+  0x01, //   OUTPUT (Cnst,Var,Abs) // padding
+  // 押下情報のインプット
+  0x95,
+  0x06, //   REPORT_COUNT (6) 全部で6つ。
+  0x75,
+  0x08, //   REPORT_SIZE (8) おのおの8ビットで表現
+  0x15,
+  0x00, //   LOGICAL_MINIMUM (0) キーコードの範囲は、
+  0x25,
+  0xdd, //   LOGICAL_MAXIMUM (221) 0～221(0xdd)まで
+
+  0x05,
+  0x07, //   USAGE_PAGE (Keyboard)
+  0x19,
+  0x00, //     USAGE_MINIMUM (0はキーコードではない)
+  0x29,
+  0xdd, //     USAGE_MAXIMUM (Keypad Hexadecimalまで)
+  0x81,
+  0x00, //   INPUT (Data,Ary,Abs)
+  0xc0 // END_COLLECTION
+]
+
 const Modifiers = {
   LEFT_CONTROL: 0x01,
   LEFT_SHIFT: 0x02,
@@ -80,7 +155,12 @@ class BLEHIDKeyboard extends BLEHIDClient {
   onDeviceReports (reports) {
     let enabledNotifications = false
     reports.forEach((report) => {
-      if (ReportType.OUTPUT == report.reportType) { this.outputReportCharacteristic = report.characteristic } else if (!enabledNotifications && ReportType.INPUT == report.reportType) {
+      if (ReportType.OUTPUT == report.reportType) {
+        this.outputReportCharacteristic = report.characteristic
+      } else if (
+        !enabledNotifications &&
+        ReportType.INPUT == report.reportType
+      ) {
         enabledNotifications = true
         report.characteristic.enableNotifications()
       }

@@ -1,0 +1,21 @@
+{
+  "service": {
+    "uuid": "180A",
+    "characteristics": {
+      "pnp_id": {
+        "uuid": "2A50",
+        "maxBytes": 1,
+        "permissions": "read",
+        "properties": "read"
+      },
+      "manufacturer_name_string": {
+        "uuid": "2A29",
+        "maxBytes": 128,
+        "type": "String",
+        "permissions": "read",
+        "properties": "read",
+        "value": "moddable_keyboard"
+      }
+    }
+  }
+}

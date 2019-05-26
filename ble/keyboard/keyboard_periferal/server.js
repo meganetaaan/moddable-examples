@@ -15,13 +15,24 @@
 /* global trace */
 
 import BLEServer from 'bleserver'
+import { IOCapability } from 'sm'
 import { uuid } from 'btutils'
 
 const DEVICE_NAME = 'Keyboard'
 
 class BLEKeyboardServer extends BLEServer {
   onReady () {
+    this.securityParameters = {
+      encryption: true,
+      mitm: false,
+      bonding: true,
+      ioCapability: IOCapability.NoInputNoOutput
+    }
     this.onDisconnected()
+  }
+  onAuthenticated () {
+    this.authenticated = true
+    trace('server authenticated')
   }
   onConnected (connection) {
     this.stopAdvertising()
@@ -35,8 +46,25 @@ class BLEKeyboardServer extends BLEServer {
       }
     })
   }
+  onPasskeyConfirm (params) {
+    let passkey = this.passkeyToString(params.passkey)
+    trace(`server confirm passkey: ${passkey}\n`)
+    this.passkeyReply(params.address, true)
+  }
+  onPasskeyDisplay (params) {
+    let passkey = this.passkeyToString(params.passkey)
+    trace(`server display passkey: ${passkey}\n`)
+  }
+  onPasskeyRequested (params) {
+    let passkey = Math.round(Math.random() * 999999)
+    trace(`server requested passkey: ${this.passkeyToString(passkey)}\n`)
+    return passkey
+  }
   onCharacteristicWritten (params, value) {
     trace(value)
+  }
+  passkeyToString (passkey) {
+    return passkey.toString().padStart(6, '0')
   }
 }
 
