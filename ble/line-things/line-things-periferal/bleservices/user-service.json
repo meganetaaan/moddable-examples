@@ -5,7 +5,7 @@
       "write": {
         "uuid": "E9062E71-9E62-4BC6-B0D3-35CDCD9B027B",
         "maxBytes": 128,
-        "type": "",
+        "type": "Uint8",
         "properties": "write",
         "permissions": "writeEncrypted,readEncrypted"
       },

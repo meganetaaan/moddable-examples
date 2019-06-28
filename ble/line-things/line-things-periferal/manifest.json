@@ -1,19 +1,27 @@
 {
 	"include": [
 		"$(MODDABLE)/examples/manifest_base.json",
+		"$(MODDABLE)/examples/manifest_piu.json",
 		"$(MODDABLE)/modules/network/ble/manifest_server.json"
 	],
 	"modules": {
+		"mac-address": "./mac-address",
 		"*": [
 			"$(MODULES)/data/hex/*",
 			"./line-things-server",
+			"./line-things-application",
 			"./main"
 		]
 	},
-	"preload": [],
+	"preload": ["mac-address"],
 	"ble": {
 		"*": [
 			"./bleservices/*"
+		]
+	},
+	"resources":{
+		"*-alpha": [
+			"$(MODDABLE)/examples/assets/fonts//OpenSans-Semibold-16"
 		]
 	}
 }

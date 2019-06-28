@@ -18,17 +18,18 @@ import BLEServer from 'bleserver'
 import { uuid } from 'btutils'
 import { IOCapability } from 'sm'
 import Hex from 'hex'
+import getMacAddress from 'mac-address'
+
 // import UUID from "uuid";
 
 const DEVICE_NAME = 'M5Stack'
 const SERVICE_UUID_LIST = ['91E4E176-D0B9-464D-9FE4-52EE3E9F1552']
-const MAC_ADDRESS = '80:7D:3A:C8:08:CA:00:00'
+// const MAC_ADDRESS = '80:7D:3A:C8:08:CA:00:00'
 const SEPARATOR = ':'
 const uuidList = [uuid(SERVICE_UUID_LIST)]
 
 class LineThingsServer extends BLEServer {
   onReady () {
-    this.count = 0
     this.deviceName = DEVICE_NAME
     this.securityParameters = {
       encryption: true,
@@ -70,7 +71,10 @@ class LineThingsServer extends BLEServer {
   onCharacteristicRead (params) {
     trace(params.name)
     if (params.name === 'value') {
-      const value = Hex.toBuffer(MAC_ADDRESS, SEPARATOR)
+      const value = getMacAddress()
+      debugger
+      // const value = Hex.toBuffer(getMacAddress(), SEPARATOR)
+      // const value = Hex.toBuffer(MAC_ADDRESS, SEPARATOR)
       trace(Hex.toString(value))
       return value
     }
@@ -78,8 +82,9 @@ class LineThingsServer extends BLEServer {
   }
   onCharacteristicWritten (params, value) {
     if (params.name === 'write') {
-      this.count++
-      trace(this.count)
+      if (this.onWritten != null) {
+        this.onWritten(value)
+      }
     }
   }
 }

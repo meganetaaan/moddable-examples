@@ -14,16 +14,30 @@
 
 /* global trace */
 
+import LineThingsApplication from './line-things-application'
 import LineThingsServer from './line-things-server'
 
 const server = new LineThingsServer()
 const buttonA = global.button.a
+let state = {
+  message: 'connected'
+}
+const application = new LineThingsApplication(state)
 
+// press buttonA to send notification to central
 buttonA.onChanged = function () {
   const value = this.read() === 1 ? 0 : 1
+  state.message = value
+  trace(value + '\n')
   if (server.notifyCharacteristic != null) {
     server.notifyValue(server.notifyCharacteristic, value)
   }
+}
+
+// when characteristics written change application's state
+server.onWritten = function (value) {
+  state.message = value
+  application.state = value
 }
 
 trace(server)
