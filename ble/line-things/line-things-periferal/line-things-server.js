@@ -24,8 +24,6 @@ import getMacAddress from 'mac-address'
 
 const DEVICE_NAME = 'M5Stack'
 const SERVICE_UUID_LIST = ['91E4E176-D0B9-464D-9FE4-52EE3E9F1552']
-// const MAC_ADDRESS = '80:7D:3A:C8:08:CA:00:00'
-const SEPARATOR = ':'
 const uuidList = [uuid(SERVICE_UUID_LIST)]
 
 class LineThingsServer extends BLEServer {
@@ -72,9 +70,6 @@ class LineThingsServer extends BLEServer {
     trace(params.name)
     if (params.name === 'value') {
       const value = getMacAddress()
-      debugger
-      // const value = Hex.toBuffer(getMacAddress(), SEPARATOR)
-      // const value = Hex.toBuffer(MAC_ADDRESS, SEPARATOR)
       trace(Hex.toString(value))
       return value
     }
