@@ -15,33 +15,19 @@
 import LineThingsApplication from './line-things-application'
 import LineThingsServer from './line-things-server'
 
-const MESSAGE = {
-  READY: 'Ready to connect',
-  CONNECTED: 'Connected',
-  ON: 'ON',
-  OFF: 'OFF'
-}
 const server = new LineThingsServer()
 const buttonA = global.button.a
 const application = new LineThingsApplication({
-  message: MESSAGE.READY
+  server,
+  message: 'HELLO'
 })
 
 // press buttonA to send notification to central
 buttonA.onChanged = function () {
   const value = this.read() === 1 ? 0 : 1
-  application.message = value
   if (server.notifyCharacteristic != null) {
     server.notifyValue(server.notifyCharacteristic, value)
   }
 }
 
 // when characteristics written change application's state
-server.onWritten = value => {
-  const message = value === 1 ? MESSAGE.ON : MESSAGE.OFF
-  application.status.string = message
-}
-
-server.onStatusChange = status => {
-  application.status.string = MESSAGE[status]
-}
