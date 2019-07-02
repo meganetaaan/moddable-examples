@@ -18,9 +18,15 @@ import QRServer from './qr-server'
 import drawQR from './draw-qr'
 import Poco from 'commodetto/Poco'
 
-const render = new Poco(screen)
-const qrServer = new QRServer()
+// set brightness
+global.power.setBrightness(8)
 
+const render = new Poco(screen)
+
+const qrServer = new QRServer()
 qrServer.onQRChange = (qr) => {
   drawQR(qr, render)
 }
+
+const gray = render.makeColor(128, 128, 128)
+render.fillRectangle(gray, 0, 0, render.width, render.height)
