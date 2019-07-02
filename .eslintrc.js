@@ -1,5 +1,8 @@
 'use strict'
 
 module.exports = {
-  extends: 'standard'
+  extends: 'standard',
+  parserOptions: {
+    ecmaVersion: 2019
+  }
 }
