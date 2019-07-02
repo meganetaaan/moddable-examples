@@ -38,9 +38,11 @@ class LineThingsServer extends BLEServer {
     this.onDisconnected()
   }
   onConnected (connection) {
+    this.onStatusChange('CONNECTED')
     this.stopAdvertising()
   }
   onDisconnected (connection) {
+    this.onStatusChange('READY')
     this.startAdvertising({
       fast: true,
       connectable: true,
@@ -77,10 +79,14 @@ class LineThingsServer extends BLEServer {
   }
   onCharacteristicWritten (params, value) {
     if (params.name === 'write') {
-      if (this.onWritten != null) {
-        this.onWritten(value)
-      }
+      this.onWritten(value)
     }
+  }
+  onWritten (value) {
+    // noop, to be overridden
+  }
+  onStatusChange (status) {
+    // noop, to be overridden
   }
 }
 
