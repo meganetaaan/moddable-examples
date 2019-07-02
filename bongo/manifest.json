@@ -4,6 +4,7 @@
     "$(MODDABLE)/examples/manifest_piu.json"
   ],
   "modules": {
+    "pins/*": "$(MODULES)/pins/i2s/*",
     "*": "./main"
   },
   "resources": {

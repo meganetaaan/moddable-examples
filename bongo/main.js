@@ -16,7 +16,7 @@
 
 import { Content, Texture, Skin, Label, Application, Style } from 'piu/MC'
 import Resource from 'Resource'
-import AudioOut from 'pins/i2s'
+import AudioOut from 'pins/audioout'
 
 const sounds = {
   high: new Resource('bongo_high.maud'),
@@ -80,7 +80,7 @@ const label = new Label(null, {
   top: 5,
   left: 5,
   style: new Style({ font: '600 28px Open Sans', color: 'white' }),
-  string: '@meganetaaan'
+  string: ''
 })
 
 const application = new Application(null, {
