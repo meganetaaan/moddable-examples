@@ -12,28 +12,28 @@
  *
  */
 
-/* global global, trace */
+/* global global */
 
-import { Content, Texture, Skin, Label, Application, Style } from 'piu/MC'
-import Resource from 'Resource'
-import AudioOut from 'pins/audioout'
+import {
+  Content,
+  Texture,
+  Skin,
+  Label,
+  Application,
+  Style
+} from 'piu/MC'
+import Sound from 'piu/Sound'
 
 const sounds = {
-  high: new Resource('bongo_high.maud'),
-  low: new Resource('bongo_low.maud'),
-  meow: new Resource('meow.maud')
+  high: new Sound({ path: 'bongo_high.wav' }),
+  low: new Sound({ path: 'bongo_low.wav' }),
+  meow: new Sound({ path: 'meow.wav' })
 }
 
-const speaker = global.speaker
-speaker.start()
-
-function playSound (key, stream) {
+function playSound (key) {
   const sound = sounds[key]
   if (sound != null) {
-    const speaker = global.speaker
-    trace(`queue_s: ${stream}\n`)
-    speaker.enqueue(stream, AudioOut.Samples, sound)
-    trace(`queue_e: ${stream}\n`)
+    sound.play()
   }
 }
 
@@ -142,14 +142,14 @@ buttonA.onChanged = function () {
   application.content('rightHand').variant = up ? 0 : 1
   // play sound
   if (up === 0) {
-    playSound('low', 0)
+    playSound('low')
   }
 }
 buttonB.onChanged = function () {
   const up = this.read()
   application.content('mouth').state = up ? 0 : 1
   if (up === 0) {
-    playSound('meow', 2)
+    playSound('meow')
   }
 }
 buttonC.onChanged = function () {
@@ -158,7 +158,7 @@ buttonC.onChanged = function () {
   application.content('leftHand').variant = up ? 0 : 1
   // play sound
   if (up === 0) {
-    playSound('high', 1)
+    playSound('high')
   }
 }
 

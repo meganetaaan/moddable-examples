@@ -5,6 +5,9 @@
   ],
   "modules": {
     "pins/*": "$(MODULES)/pins/i2s/*",
+		"piu/Sound": [
+			"$(MODULES)/piu/MC/piuSound"
+		],
     "*": "./main"
   },
   "resources": {
