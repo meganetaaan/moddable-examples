@@ -1,6 +1,7 @@
 {
   "include": [
     "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/examples/manifest_piu.json",
     "$(MODDABLE)/modules/pins/i2c/manifest.json"
   ],
   "modules": {
@@ -13,5 +14,10 @@
       "sda_pin": 21,
       "scl_pin": 22
     }
+  },
+  "resources": {
+		"*-alpha": [
+			"$(MODDABLE)/examples/assets/fonts//OpenSans-Semibold-16"
+		]
   }
 }
