@@ -5,6 +5,12 @@ import { hsl, rgb } from 'piu/All'
 import Timer from 'timer'
 import TCS34725 from './tcs34725'
 
+const FONT = 'OpenSans-Semibold-16'
+
+if (global.power) {
+  global.power.setBrightness(10)
+}
+
 class ColorProvider {
   constructor (sensor, interval = 2000) {
     this._sensor = sensor
@@ -40,6 +46,21 @@ class ColorProvider {
   }
 }
 
+const application = new Application(null, {
+  contents: [
+    new Label(null, {
+      anchor: 'rgbLabel',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      skin: new Skin({ fill: 'black' }),
+      style: new Style({ font: FONT, color: 'white' }),
+      string: 'hello'
+    })
+  ]
+})
+
 const tcs = new TCS34725()
 const c = new ColorProvider(tcs)
 c.onStart = sensor => {
@@ -49,7 +70,12 @@ c.onStop = sensor => {
   sensor.disable()
 }
 c.onRGB = ({ r, g, b }) => {
-  trace(`R: ${Math.floor(r)}, G: ${Math.floor(g)}, B: ${Math.floor(b)}\n`)
+  const str = `rgb(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)})`
+  trace(str + '\n')
+  application.first.string = str
+
+  const fill = rgb(r, g, b)
+  application.first.skin = new Skin({ fill })
 }
 
 c.start()
