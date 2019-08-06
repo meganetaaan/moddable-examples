@@ -110,9 +110,9 @@ export default class DHT12 extends I2C {
     }
 
     return {
-      r: rawData.r / rawData.c * 255.0,
-      g: rawData.g / rawData.c * 255.0,
-      b: rawData.b / rawData.c * 255.0
+      r: (rawData.r / rawData.c * 256.0) * 0.90,
+      g: rawData.g / rawData.c * 256.0,
+      b: rawData.b / rawData.c * 256.0 * 1.10
     }
   }
 }
