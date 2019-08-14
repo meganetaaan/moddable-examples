@@ -1,10 +1,11 @@
+/* global trace */
 import { Application, Style, Skin, Label } from 'piu/MC'
 
-const FONT = 'OpenSans-Semibold-16'
+const FONT = 'OpenSans-Regular-52'
 
-const application = new Application({
+const application = new Application(null, {
   contents: [
-    new Label({
+    new Label(null, {
       style: new Style({ font: FONT, color: 'white' }),
       skin: new Skin({ fill: 'black' }),
       top: 0,
@@ -22,7 +23,8 @@ const counts = {
 
 function countup (button) {
   counts[button] += 1
-  application.first.string = counts[button]
+  trace(counts[button])
+  application.first.string = String(counts[button])
 }
 
 global.button.a.onChanged = function () {
