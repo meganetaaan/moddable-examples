@@ -12,8 +12,6 @@
  *
  */
 
-/* global global */
-
 import {
   Content,
   Texture,

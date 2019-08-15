@@ -1,6 +1,6 @@
 /* global trace */
 
-import { Application, Style, Skin, Label, Behavior, Column } from 'piu/MC'
+import { Application, Style, Skin, Label } from 'piu/MC'
 import { hsl, rgb } from 'piu/All'
 import Timer from 'timer'
 import TCS34725 from './tcs34725'
@@ -134,18 +134,14 @@ c.onStop = sensor => {
 }
 c.onRGB = ({ r, g, b }) => {
   const { h, s, l } = rgbToHsl(r, g, b)
-  // const fill = rgb(r, g, b)
   const fill = hsl(h, s * 5, 0.5)
   application.first.skin = new Skin({ fill })
 
-  trace(`hsl(${h.toFixed(0)}, ${s.toFixed(2)}, ${l.toFixed(2)})\n`)
-  // const str = `rgb(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)})`
-
   const color = hslToRgb(h, s, l)
 
-  trace(`rgb(${color.r}, ${color.g}, ${color.b})\n`)
   const str = '#' + (rgb(color.r, color.g, color.b) >> 8).toString(16)
   trace(str + '\n')
+
   application.first.string = str
 }
 

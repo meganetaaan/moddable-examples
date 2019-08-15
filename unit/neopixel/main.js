@@ -14,7 +14,10 @@
 import NeoPixel from 'neopixel'
 import Timer from 'timer'
 
-const np = new NeoPixel({ length: 29, pin: 32, order: 'RGB' })
+// const np = new NeoPixel({ length: 29, pin: 32, order: 'RGB' })
+
+// On M5GO or M5Stack Fire
+const np = new NeoPixel({ length: 10, pin: 15, order: 'RGB' })
 
 Timer.delay(1)
 np.fill(np.makeRGB(255, 255, 255))
