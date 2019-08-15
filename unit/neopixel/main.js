@@ -14,9 +14,13 @@
 import NeoPixel from 'neopixel'
 import Timer from 'timer'
 
+// On M5Stack + NeoPixel Unit
+// const np = new NeoPixel({ length: 29, pin: 21, order: 'RGB' })
+
+// On M5StickC + NeoPixel Unit
 // const np = new NeoPixel({ length: 29, pin: 32, order: 'RGB' })
 
-// On M5GO or M5Stack Fire
+// On M5GO or M5Stack Fire + embedded NeoPixel
 const np = new NeoPixel({ length: 10, pin: 15, order: 'RGB' })
 
 Timer.delay(1)
