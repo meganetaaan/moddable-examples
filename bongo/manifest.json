@@ -13,9 +13,6 @@
   "resources": {
     "*": [
       "./assets/*"
-    ],
-    "*-alpha": [
-      "./fonts/OpenSans-Semibold-28"
     ]
   }
 }
