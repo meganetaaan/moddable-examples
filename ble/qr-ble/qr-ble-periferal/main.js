@@ -14,8 +14,8 @@
 
 /* global screen */
 
-import QRServer from './qr-server'
-import drawQR from './draw-qr'
+import QRServer from 'qr-server'
+import drawQR from 'draw-qr'
 import Poco from 'commodetto/Poco'
 
 // set brightness
