@@ -2,7 +2,7 @@
   "name": "moddable-examples",
   "version": "1.0.0",
   "description": "### bongo",
-  "main": ".eslintrc.js",
+  "main": "",
   "dependencies": {},
   "devDependencies": {
     "eslint": "^5.16.0",
