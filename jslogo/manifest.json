@@ -7,8 +7,11 @@
     "*": "./main"
   },
   "resources": {
-    "*": [
-      "./assets/*"
+    "*-alpha": [
+      "./assets/js-logo"
+    ],
+    "*-mask": [
+      "./assets/moddable-logo"
     ]
   }
 }
