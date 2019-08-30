@@ -12,7 +12,8 @@
   },
   "resources": {
     "*": [
-      "./assets/*"
+      "./assets/images/*",
+      "./assets/sounds/*"
     ]
   }
 }
