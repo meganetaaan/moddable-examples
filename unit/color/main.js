@@ -3,7 +3,7 @@
 import { Application, Style, Skin, Label } from 'piu/MC'
 import { hsl, rgb } from 'piu/All'
 import Timer from 'timer'
-import TCS34725 from './tcs34725'
+import TCS34725 from 'tcs34725'
 
 const FONT = 'OpenSans-Semibold-16'
 
