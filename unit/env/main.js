@@ -2,7 +2,7 @@
 
 import { Application, Style, Skin, Label, Behavior, Column } from 'piu/MC'
 import { hsl, rgb } from 'piu/All'
-import DHT12 from './dht12'
+import DHT12 from 'dht12'
 
 const dht12 = new DHT12()
 const FONT = 'OpenSans-Semibold-16'
