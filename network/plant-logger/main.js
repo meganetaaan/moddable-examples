@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2019 Shinya Ishikawa
- */
-
 import Timer from 'timer'
 
 import Analog from 'pins/analog'
