@@ -1,26 +1,44 @@
-/* global trace */
 import { Server } from 'http'
+import NeoPixel from 'neopixel'
+import MDNS from 'mdns'
+
+/* global trace */
+
+const neoPixel = new NeoPixel({ length: 60, pin: 21, order: 'RGB' })
+
+let hostName = 'm5stack'
+const mDNS = new MDNS({ hostName }, function (message, value) {
+  if (MDNS.hostName === message) {
+    hostName = value
+  }
+})
+trace(mDNS)
 
 const server = new Server({ port: 80 })
-
 server.callback = function (message, value, value2) {
-  if (Server.status === message) this.path = value
-
-  /*
   if (message === 2) {
-    trace(value)
-    if (value === 'on') {
-      trace('on')
-    } else if (value === 'off') {
-      trace('off')
+    if (value === '/on' && value2 === 'GET') {
+      this.status = 'on'
+      neoPixel.fill(neoPixel.makeRGB(255, 255, 255))
+      neoPixel.update()
+    } else if (value === '/off' && value2 === 'GET') {
+      this.status = 'off'
+      neoPixel.fill(neoPixel.makeRGB(0, 0, 0))
+      neoPixel.update()
     }
   }
 
   if (Server.prepareResponse === message) {
-    return {
-      headers: ['Content-type', 'text/plain'],
-      body: `hello, client at path ${this.path}.`
+    const response = {
+      headers: ['Content-type', 'text/plain']
     }
+    if (this.status === 'on') {
+      response.body = 'The light is on'
+    } else if (this.status === 'off') {
+      response.body = 'The light is off'
+    } else {
+      response.body = 'no content'
+    }
+    return response
   }
-  */
 }

@@ -2,14 +2,26 @@
 	"include": [
 		"$(MODDABLE)/examples/manifest_base.json",
 		"$(MODDABLE)/examples/manifest_net.json",
+		"$(MODDABLE)/modules/network/mdns/manifest.json"
 	],
 	"modules": {
 		"*": [
 			"./main",
+			"$(MODULES)/drivers/neopixel/*",
 			"$(MODULES)/network/http/*"
 		]
 	},
 	"preload": [
 		"http"
-	]
+	],
+	"platforms": {
+		"esp32": {
+			"modules": {
+				"*": "$(MODULES)/drivers/neopixel/esp32/*"
+			}
+		},
+		"...": {
+			"error": "unsupported platform"
+		}
+	}
 }
