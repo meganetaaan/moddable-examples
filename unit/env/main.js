@@ -12,6 +12,10 @@ const TEMP_MIN = 5
 const TEMP_RANGE = TEMP_MAX - TEMP_MIN
 const HUE_RANGE = 270
 
+if (global.power) {
+  global.power.setBrightness(8)
+}
+
 function temperatureToColor (temperature) {
   const clampedTemp = Math.max(Math.min(temperature, TEMP_MAX), TEMP_MIN)
   const hue = ((TEMP_MAX - clampedTemp) * HUE_RANGE) / TEMP_RANGE
