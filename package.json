@@ -1,9 +1,7 @@
 {
   "name": "moddable-examples",
   "version": "1.0.0",
-  "description": "### bongo",
-  "main": "",
-  "dependencies": {},
+  "description": "「実践Moddable」のサンプルコード",
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-standard": "^12.0.0",
