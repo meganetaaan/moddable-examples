@@ -4,12 +4,12 @@ import { Request } from 'http'
 
 const HOST = 'maker.ifttt.com'
 const API_KEY = 'YOUR_API_KEY_HERE'
-const EVENT = 'button_pressed'
+const EVENT = 'moddable_button_pressed'
 
-const triggerIFTTT = () => {
+const triggerIFTTT = (v) => {
   let request = new Request({
     host: HOST,
-    path: `/trigger/${EVENT}/with/key/${API_KEY}`,
+    path: `/trigger/${EVENT}/with/key/${API_KEY}?value1=${v}`,
     response: String
   })
   request.callback = function (message, value) {
@@ -19,9 +19,15 @@ const triggerIFTTT = () => {
   }
 }
 
-button.a.onChange = function () {
+button.a.onChanged = function () {
   const v = this.read()
   if (v) {
-    triggerIFTTT()
+    triggerIFTTT('a')
+  }
+}
+button.b.onChanged = function () {
+  const v = this.read()
+  if (v) {
+    triggerIFTTT('b')
   }
 }
