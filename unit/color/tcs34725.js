@@ -21,16 +21,19 @@ const GAIN = {
 const WHOAMI = 0x12
 const COMMAND_BIT = 0x80
 const ATIME = 0x01
-const CONTROL = 0x0F
+const CONTROL = 0x0f
 const CDATAL = 0x14
 const RDATAL = 0x16
 const GDATAL = 0x18
-const BDATAL = 0x1A
+const BDATAL = 0x1a
 const ENABLE = 0x00
 const ENABLE_PON = 0x01
 const ENABLE_AEN = 0x02
 
-export default class DHT12 extends I2C {
+export default class DHT12 {
+  #i2c
+  #integrationTime = INTEGRATION_TIME.TIME_154MS
+  #gain = GAIN.GAIN_4X
   constructor (
     dictionary = {
       address: ADDRESS,
@@ -38,64 +41,64 @@ export default class DHT12 extends I2C {
       gain: GAIN.GAIN_4X
     }
   ) {
-    super(dictionary)
-    this._integrationTime = dictionary.integrationTime
-    this._gain = dictionary.gain
+    this.#i2c = new I2C(dictionary)
+    this.#integrationTime = dictionary.integrationTime
+    this.#gain = dictionary.gain
     this.init()
   }
 
-  _read8 (reg) {
-    this.write(COMMAND_BIT | reg)
-    return this.read(1)[0]
+  #read8 (reg) {
+    this.#i2c.write(COMMAND_BIT | reg)
+    return this.#i2c.read(1)[0]
   }
 
-  _read16 (reg) {
-    this.write(COMMAND_BIT | reg)
-    const buf = this.read(2)
+  #read16 (reg) {
+    this.#i2c.write(COMMAND_BIT | reg)
+    const buf = this.#i2c.read(2)
     const t = buf[0]
     const x = buf[1]
-    return x << 8 | t
+    return (x << 8) | t
   }
 
-  _write8 (reg, value) {
-    this.write(COMMAND_BIT | reg, value & 0xFF)
+  #write8 (reg, value) {
+    this.#i2c.write(COMMAND_BIT | reg, value & 0xff)
   }
 
   init () {
     // make sure connected
-    const whoami = this._read8(WHOAMI)
+    const whoami = this.#read8(WHOAMI)
     if (whoami !== 0x44 && whoami !== 0x10) {
       throw new Error('Sensor not connected')
     }
 
-    this.setIntegrationTime(this._integrationTime)
-    this.setGain(this._gain)
+    this.setIntegrationTime(this.#integrationTime)
+    this.setGain(this.#gain)
   }
 
   enable () {
-    this._write8(ENABLE, ENABLE_PON)
-    this._write8(ENABLE, ENABLE_PON | ENABLE_AEN)
+    this.#write8(ENABLE, ENABLE_PON)
+    this.#write8(ENABLE, ENABLE_PON | ENABLE_AEN)
   }
   disable () {
-    const reg = this._read8(ENABLE)
-    this._write8(ENABLE, reg & ~(ENABLE_PON | ENABLE_AEN))
+    const reg = this.#read8(ENABLE)
+    this.#write8(ENABLE, reg & ~(ENABLE_PON | ENABLE_AEN))
   }
 
   setIntegrationTime (integrationTime) {
-    this._write8(ATIME, integrationTime)
-    this._integrationTime = integrationTime
+    this.#write8(ATIME, integrationTime)
+    this.#integrationTime = integrationTime
   }
 
   setGain (gain) {
-    this._write8(CONTROL, gain)
-    this._gain = gain
+    this.#write8(CONTROL, gain)
+    this.#gain = gain
   }
 
   getRawData () {
-    const c = this._read16(CDATAL)
-    const r = this._read16(RDATAL)
-    const g = this._read16(GDATAL)
-    const b = this._read16(BDATAL)
+    const c = this.#read16(CDATAL)
+    const r = this.#read16(RDATAL)
+    const g = this.#read16(GDATAL)
+    const b = this.#read16(BDATAL)
     return { c, r, g, b }
   }
 
@@ -110,9 +113,9 @@ export default class DHT12 extends I2C {
     }
 
     return {
-      r: (rawData.r / rawData.c * 256.0) * 0.90,
-      g: rawData.g / rawData.c * 256.0,
-      b: rawData.b / rawData.c * 256.0 * 1.10
+      r: (rawData.r / rawData.c) * 256.0 * 0.9,
+      g: (rawData.g / rawData.c) * 256.0,
+      b: (rawData.b / rawData.c) * 256.0 * 1.1
     }
   }
 }
