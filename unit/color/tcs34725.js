@@ -30,7 +30,7 @@ const ENABLE = 0x00
 const ENABLE_PON = 0x01
 const ENABLE_AEN = 0x02
 
-export default class DHT12 {
+export default class TCS34725 {
   #i2c
   #integrationTime = INTEGRATION_TIME.TIME_154MS
   #gain = GAIN.GAIN_4X

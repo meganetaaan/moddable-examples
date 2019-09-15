@@ -4,6 +4,9 @@ module.exports = {
   parser: 'babel-eslint',
   extends: 'standard',
   parserOptions: {
-    ecmaVersion: 2019
-  }
+    ecmaVersion: 2019,
+    babelOptions: {
+      configFile: './babel.config.js'
+    }
+  },
 }
