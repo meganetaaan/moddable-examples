@@ -79,6 +79,7 @@ export default class TCS34725 {
     this.#write8(ENABLE, ENABLE_PON)
     this.#write8(ENABLE, ENABLE_PON | ENABLE_AEN)
   }
+
   disable () {
     const reg = this.#read8(ENABLE)
     this.#write8(ENABLE, reg & ~(ENABLE_PON | ENABLE_AEN))
