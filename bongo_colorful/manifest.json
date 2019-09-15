@@ -1,0 +1,20 @@
+{
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/examples/manifest_piu.json",
+    "../tmp/cryptdigest/manifest.json"
+  ],
+  "modules": {
+    "pins/*": "$(MODULES)/pins/i2s/*",
+		"piu/Sound": [
+			"$(MODULES)/piu/MC/piuSound"
+		],
+    "*": "./main"
+  },
+  "resources": {
+    "*": [
+      "./assets/images/*",
+      "./assets/sounds/*"
+    ]
+  }
+}
