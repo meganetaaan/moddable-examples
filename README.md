@@ -36,11 +36,38 @@ $ mcconfig -d -m -p esp32/m5stack
 Bongo Cat originally created by @StrayRogue and @DitzyFlama
 Image by <a href="https://pixabay.com/users/obBilder-3192627/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=1661115">obBilder</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=1661115">Pixabay</a>
 
-### qr-ble
+### counter
+
+ボタンを押すとカウントアップするカウンターです。
+
+### unit/env
+
+温湿度計のサンプルです。
+M5StackのEnvユニットから温度と湿度を取得し、画面に表示します。
+
+### unit/color
+
+カラーピッカーのサンプルです。
+M5StackのColorユニットから色を取得し、16進数のカラーコードに変換して表示します。
+
+### unit/neopixel
+
+Neoチカのサンプルです。
+M5StackのNeoPixelユニット、またはM5StackFireやM5StackGoに搭載のLEDを光らせます。
+
+### network/ifttt-client
+
+IFTTTのWebHookを叩くクライアントです。
+
+### network/light-server
+
+ネットワーク経由でLEDのON/OFFができるサーバです。
+
+### ble/qr-ble
 
 BLE(Bluetooth Low Energy) を使ったサンプルです。
 スマートフォンから文字列を送信し、M5StackにQRコードとして表示できます。
 
-### line-things
+### ble/line-things
 
 - [line/line-things-starter](https://github.com/line/line-things-starter)のModdableSDK向け移植です。
