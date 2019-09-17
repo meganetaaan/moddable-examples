@@ -16,24 +16,27 @@ export default class DHT12 extends I2C {
     this._scale = dictionary.scale
   }
 
-  readTemperature (s = this._scale) {
+  readEnvironment (s = this._scale) {
     this.write(0)
     const bytes = this.read(4)
+    let temperature
     switch (s) {
       case SCALE.CELSIUS:
-        return bytes[2] + bytes[3] / 10
+        temperature = bytes[2] + bytes[3] / 10
+        break
       case SCALE.FAHRENHEIT:
-        return (bytes[2] + bytes[3] / 10) * 1.8 + 32
+        temperature = (bytes[2] + bytes[3] / 10) * 1.8 + 32
+        break
       case SCALE.KELVIN:
-        return (bytes[2] + bytes[3] / 10) + 273.15
+        temperature = (bytes[2] + bytes[3] / 10) + 273.15
+        break
       default:
         throw new Error('Scale not supported')
     }
-  }
-
-  readHumidity () {
-    this.write(0)
-    const bytes = this.read(2)
-    return bytes[0] + bytes[1] / 10
+    const humidity = bytes[0] + bytes[1] / 10
+    return {
+      temperature,
+      humidity
+    }
   }
 }
