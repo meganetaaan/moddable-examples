@@ -1,0 +1,38 @@
+{
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/examples/manifest_net.json",
+    "$(MODDABLE)/examples/manifest_piu.json",
+    "$(MODDABLE)/modules/crypt/tls.json"
+  ],
+  "modules": {
+    "*": [
+      "./main",
+      "./tweet-application",
+      "./secret-token",
+      "./twitter",
+      "./tweets",
+      "$(MODULES)/network/http/*"
+    ]
+  },
+  "resources": {
+    "*": ["./assets/icons/*", "./assets/images/*"],
+    "*-alpha": ["./assets/fonts/*"]
+  },
+  "data": {
+    "*": [
+      "./cert/digicerthasca",
+      "./cert/digicertssca",
+      "$(MODULES)/crypt/data/ca107",
+      "./test.json"
+    ]
+  },
+  "config": {
+    "sntp": "pool.ntp.org"
+  },
+  "preload": ["http", "tweets", "twitter", "tweet-application"],
+  "creation": {
+    "stack": 512,
+    "static": 131072
+  }
+}

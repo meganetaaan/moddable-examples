@@ -1,0 +1,184 @@
+import {
+  Container,
+  Content,
+  Skin,
+  Style,
+  Text,
+  Label,
+  Port,
+  Behavior,
+  Texture,
+  Application
+} from 'piu/MC'
+/* global trace */
+
+const HEADER_HEIGHT = 36
+const QUERY = 'M5Stack'
+// const APPLICATION_WIDTH = 320
+// const APPLICATION_HEIGHT = 240
+const ParagraphStyle = Style.template({
+  font: 'Cica-Regular',
+  color: '#222222',
+  horizontal: 'left'
+})
+const TitleStyle = Style.template({
+  font: 'Cica-Regular',
+  color: '#FFFFFF',
+  horizontal: 'left'
+})
+const IndexStyle = Style.template({
+  font: 'Cica-Regular',
+  color: '#FFFFFF',
+  horizontal: 'right'
+})
+const NameStyle = Style.template({
+  font: 'Cica-Bold',
+  color: '#222222',
+  horizontal: 'left'
+})
+const ScreenNameStyle = Style.template({
+  font: 'Cica-Regular',
+  color: '#888888',
+  horizontal: 'left'
+})
+const center = { top: 0, bottom: 0, left: 0, right: 0 }
+
+const SearchTexture = Texture.template({ path: 'search_36x36-alpha.bmp' })
+const IconTexture = Texture.template({ path: 'm5stack.png' })
+
+const IconSkin = Skin.template({
+  Texture: IconTexture,
+  x: 6,
+  y: 6,
+  width: 36,
+  height: 36
+})
+
+const SearchSkin = Skin.template({
+  color: 'white',
+  Texture: SearchTexture,
+  width: 36,
+  height: 36
+})
+
+const SearchIcon = Content.template(({ ...props }) => ({
+  Skin: SearchSkin,
+  ...props
+}))
+
+const TitleLabel = Label.template(({ title, ...props }) => ({
+  Style: TitleStyle,
+  string: title,
+  ...props
+}))
+
+const IndexLabel = Label.template(({ current, total, ...props }) => ({
+  Style: IndexStyle,
+  string: `(${current + 1}/${total})`,
+  ...props
+}))
+
+const Header = Container.template(({ title, icon, current, total, ...props }) => ({
+  skin: new Skin({ fill: '#1DA1F2' }),
+  contents: [
+    new SearchIcon({
+      left: 4,
+      top: 0,
+      icon
+    }),
+    new TitleLabel({
+      left: 44,
+      top: 0,
+      width: 200,
+      height: HEADER_HEIGHT,
+      title
+    }),
+    new IndexLabel({
+      right: 4,
+      top: 0,
+      width: 80,
+      height: HEADER_HEIGHT,
+      current,
+      total
+    })
+  ], // TODO
+  ...props
+}))
+
+const Tweet = Container.template(({ tweet }) => {
+  const screenNameStyle = new ScreenNameStyle()
+  return {
+    top: HEADER_HEIGHT,
+    left: 0,
+    width: 320,
+    height: 240 - HEADER_HEIGHT,
+    skin: new Skin({ fill: '#FAFAFA' }),
+    contents: [
+    // screen name
+      new Port(null, {
+        Skin: IconSkin,
+        top: 4,
+        left: 4,
+        width: 36,
+        height: 36,
+        Behavior: class extends Behavior {
+          onDraw (port) {
+          // port.fillColor('blue', 0, 0, port.width, port.height)
+            port.drawContent(0, 0, port.width, port.height)
+          }
+        }
+      }),
+      new Text(null, {
+        top: 20,
+        left: 44,
+        right: 4,
+        height: 24,
+        Style: NameStyle,
+        blocks: [
+          {
+            spans: [
+              { spans: tweet.user.name },
+              { style: screenNameStyle, spans: ` @${tweet.user.screen_name}` }
+            ]
+          }
+        ]
+      }),
+      // text
+      new Text(null, {
+        top: 44,
+        left: 4,
+        right: 4,
+        bottom: 0,
+        Style: ParagraphStyle,
+        string: tweet.text
+      })
+    ]
+  }
+})
+
+const TweetApplication = Application.template(({ tweets }) => ({
+  commandListLength: 4096,
+  displayListLength: 4096 * 3,
+  skin: new Skin({ fill: '#FFFFFF' }),
+  ...center,
+  contents: [
+    new Header({
+      title: QUERY,
+      current: 0,
+      total: tweets.statuses.length,
+      icon: '',
+      top: 0,
+      left: 0,
+      width: 320,
+      height: HEADER_HEIGHT
+    }),
+    new Tweet({ tweet: tweets.statuses[0] })
+  ],
+  Behavior: class extends Behavior {
+    onDisplaying (ap) {
+      trace('hoge')
+    }
+  }
+}))
+
+export default TweetApplication
