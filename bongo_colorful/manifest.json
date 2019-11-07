@@ -9,12 +9,26 @@
 		"piu/Sound": [
 			"$(MODULES)/piu/MC/piuSound"
 		],
-    "*": "./main"
+    "*": [
+      "./main",
+			"$(MODULES)/drivers/neopixel/*"
+    ]
   },
   "resources": {
     "*": [
       "./assets/images/*",
       "./assets/sounds/*"
     ]
-  }
+  },
+	"preload": "neopixel",
+	"platforms": {
+		"esp32": {
+			"modules": {
+				"*": "$(MODULES)/drivers/neopixel/esp32/*"
+			}
+		},
+		"...": {
+			"error": "unsupported platform"
+		}
+	}
 }

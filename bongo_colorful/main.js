@@ -18,8 +18,12 @@ import {
   Skin,
   Application
 } from 'piu/MC'
+import Timer from 'timer'
 import Sound from 'piu/Sound'
 import getDeviceUniqueColor from 'getDeviceUniqueColor'
+import NeoPixel from 'neopixel'
+
+const np = new NeoPixel({ length: 60, pin: 21, order: 'GRB' })
 
 const deviceColor = getDeviceUniqueColor()
 
@@ -125,6 +129,7 @@ const application = new Application(null, {
   ]
 })
 
+const effects = new Uint8Array(np.length).fill(1)
 const buttonA = global.button.a
 const buttonB = global.button.b
 const buttonC = global.button.c
@@ -134,6 +139,7 @@ buttonA.onChanged = function () {
   application.content('rightHand').variant = up ? 0 : 1
   // play sound
   if (up === 0) {
+    effects[0] = 1
     playSound('low')
   }
 }
@@ -141,6 +147,7 @@ buttonB.onChanged = function () {
   const up = this.read()
   application.content('mouth').state = up ? 0 : 1
   if (up === 0) {
+    effects[0] = 2
     playSound('meow')
   }
 }
@@ -150,8 +157,34 @@ buttonC.onChanged = function () {
   application.content('leftHand').variant = up ? 0 : 1
   // play sound
   if (up === 0) {
+    effects[0] = 1
     playSound('high')
   }
 }
+
+const white = np.makeRGB(255, 255, 255)
+const pink = np.makeRGB(255, 100, 100)
+const black = np.makeRGB(0, 0, 0)
+// const dColor = np.makeRGB(deviceColor.r, deviceColor.g, deviceColor.b)
+let i = 0
+Timer.repeat(_ => {
+  for (i = 0; i < np.length; i++) {
+    switch (effects[i]) {
+      case 1:
+        np.setPixel(i, white)
+        break
+      case 2:
+        np.setPixel(i, pink)
+        break
+      default:
+        np.setPixel(i, black)
+    }
+  }
+  np.update()
+  for (i = effects.length; i > 0; i--) {
+    effects[i] = effects[i - 1]
+  }
+  effects[0] = 0
+}, 1000 / 60)
 
 export default application
