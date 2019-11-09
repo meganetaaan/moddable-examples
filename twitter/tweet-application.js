@@ -15,7 +15,7 @@ import WipeTransition from 'piu/WipeTransition'
 
 /* global trace */
 
-const HEADER_HEIGHT = 36
+const HEADER_HEIGHT = 32
 const QUERY = 'M5Stack'
 // const APPLICATION_WIDTH = 320
 // const APPLICATION_HEIGHT = 240
@@ -220,7 +220,6 @@ const Header = Container.template(({ title, icon, current, total, ...props }) =>
 }))
 
 const Tweet = Container.template(({ tweet }) => {
-  const screenNameStyle = new ScreenNameStyle()
   return {
     ...filledPosition,
     skin: new Skin({ fill: '#FAFAFA' }),
@@ -239,24 +238,27 @@ const Tweet = Container.template(({ tweet }) => {
           }
         }
       }),
-      new Text(null, {
-        top: 20,
+      new Label(null, {
+        top: 4,
         left: 44,
         right: 4,
-        height: 24,
+        height: 16,
         Style: NameStyle,
-        blocks: [
-          {
-            spans: [
-              { spans: tweet.user.name },
-              { style: screenNameStyle, spans: ` @${tweet.user.screen_name}` }
-            ]
-          }
-        ]
+        string: tweet.user.name,
+        clip: true
+      }),
+      new Label(null, {
+        top: 21,
+        left: 44,
+        right: 4,
+        height: 16,
+        Style: ScreenNameStyle,
+        string: `@${tweet.user.screen_name}`,
+        clip: true
       }),
       // text
       new Die(null, {
-        top: 44,
+        top: 42,
         left: 4,
         right: 4,
         bottom: 24,
@@ -277,12 +279,13 @@ const Tweet = Container.template(({ tweet }) => {
       }),
       /*
       new Text(null, {
-        top: 44,
+        top: 42,
         left: 4,
         right: 4,
-        bottom: 40,
+        bottom: 24,
         Style: ParagraphStyle,
-        string: tweet.text
+        string: tweet.text,
+        clip: true
       }),
       */
       new ReplyCount({
@@ -313,9 +316,11 @@ const Body = Container.template(({ tweets, current, total, ...props }) => ({
     }
     onPropsChanged (it, props) {
       let trBegin, trEnd
-      // TODO: concider when tweets changed
-      if (props.current === it.props.current) {
-        // nothing to do
+      if (props.tweets !== it.props.tweets) {
+        trBegin = 'center'
+        trEnd = 'middle'
+      } else if (props.current === it.props.current) {
+        // neither tweets nor current changed so nothing to do
         return
       } else if (props.current > it.props.current) {
         trBegin = 'left'
@@ -324,8 +329,8 @@ const Body = Container.template(({ tweets, current, total, ...props }) => ({
         trBegin = 'right'
         trEnd = 'left'
       }
-      // switch tweets
       it.props = props
+      // switch tweets
       const transition = new WipeTransition(
         250,
         Math.quadEaseOut,
@@ -340,8 +345,8 @@ const Body = Container.template(({ tweets, current, total, ...props }) => ({
 }))
 
 const TweetApplication = Application.template(({ tweets }) => ({
-  commandListLength: 4096,
-  displayListLength: 4096 * 3,
+  commandListLength: 2048,
+  displayListLength: 4096 * 2,
   skin: new Skin({ fill: '#FFFFFF' }),
   ...filledPosition,
   contents: [
@@ -378,8 +383,8 @@ const TweetApplication = Application.template(({ tweets }) => ({
         current: idx
       }
       ap.props = props
-      ap.first.delegate('onPropsChanged', ap.props)
-      ap.last.delegate('onPropsChanged', ap.props)
+      ap.header.delegate('onPropsChanged', ap.props)
+      ap.body.delegate('onPropsChanged', ap.props)
     }
     onCreate (ap) {
       let props = {
@@ -388,6 +393,17 @@ const TweetApplication = Application.template(({ tweets }) => ({
         current: 0
       }
       ap.props = props
+      ap.header = ap.first
+      ap.body = ap.last
+    }
+    onPropsChanged (ap, tweets) {
+      ap.props = {
+        tweets,
+        total: tweets.statuses.length,
+        current: 0
+      }
+      ap.header.delegate('onPropsChanged', ap.props)
+      ap.body.delegate('onPropsChanged', ap.props)
     }
     onNext (ap) {
       this.changeIndex(ap, ap.props.current + 1)
