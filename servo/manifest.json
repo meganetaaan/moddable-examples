@@ -1,0 +1,24 @@
+{
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/examples/manifest_piu.json",
+    "$(MODDABLE)/modules/pins/i2c/manifest.json"
+  ],
+  "modules": {
+    "*": "./main",
+    "pins/i2c": "$(MODDABLE)/modules/pins/i2c"
+  },
+  "platforms": {
+    "esp32/m5stack": {
+      "defines": {
+        "i2c": {
+          "sda_pin": 21,
+          "scl_pin": 22
+        }
+      }
+    }
+  },
+  "resources": {
+    "*-alpha": ["$(MODDABLE)/examples/assets/fonts//OpenSans-Regular-52"]
+  }
+}
