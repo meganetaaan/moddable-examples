@@ -14,7 +14,7 @@
 
 /* global trace */
 
-import BLEKeyboradServer from './server'
+import BLEKeyboradServer from 'server'
 
 const server = new BLEKeyboradServer()
 trace(server)
