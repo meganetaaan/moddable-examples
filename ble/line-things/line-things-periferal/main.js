@@ -1,5 +1,5 @@
-import LineThingsApplication from './line-things-application'
-import LineThingsServer from './line-things-server'
+import LineThingsApplication from 'line-things-application'
+import LineThingsServer from 'line-things-server'
 
 const server = new LineThingsServer()
 const buttonA = global.button.a
