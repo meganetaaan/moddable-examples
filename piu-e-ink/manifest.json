@@ -1,0 +1,50 @@
+{
+	"include": [
+		"$(MODDABLE)/examples/manifest_base.json",
+		"$(MODDABLE)/examples/manifest_piu.json",
+		"$(MODDABLE)/modules/drivers/destm32s/manifest.json"
+	],
+	"modules": {
+		"*": "./main"
+	},
+	"resources":{
+		"*-mask": [
+			"./fonts/*",
+			"./eink",
+			"./love",
+			"./moddable"
+		]
+	},
+	"config": {
+		"screen": "destm32s",
+		"touch": ""
+	},
+	"defines": {
+		"spi": {
+			"mosi_pin": 14,
+			"sck_pin": 13
+		},
+		"destm32s": {
+			"hz": 4000000,
+			"width": 400,
+			"height": 300,
+			"cs_pin": 15,
+			"dc_pin": 27,
+			"rst_pin": 26,
+			"busy_pin": 25,
+			"spi_port": "HSPI_HOST"
+		}
+	},
+	"platforms": {
+		"esp/crystalfontz_monochrome_epaper": {
+			"config": {
+				"rotation": 270
+			}
+		},
+		"esp/moddable_three": {
+			"config": {
+				"rotation": 270
+			}
+		}
+	}
+}
