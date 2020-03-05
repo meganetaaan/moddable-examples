@@ -1,10 +1,29 @@
 {
   "build": {},
-  "include": ["$(MODDABLE)/examples/manifest_base.json"],
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+		"$(MODDABLE)/examples/manifest_commodetto.json"
+  ],
   "modules": {
-    "*": ["$(MODULES)/drivers/neopixel/*", "./main"]
+    "*": [
+      "$(MODULES)/drivers/neopixel/*",
+      "./main",
+      "./neomatrix",
+      "./neomatrix-render"
+    ],
+    "commodetto/parseBMF": "$(COMMODETTO)/commodettoParseBMF",
+    "commodetto/parseBMP": "$(COMMODETTO)/commodettoParseBMP",
+    "commodetto/parseRLE": "$(COMMODETTO)/commodettoParseRLE",
+    "commodetto/Bitmap": "$(COMMODETTO)/commodettoBitmap",
+    "commodetto/Poco": "$(COMMODETTO)/commodettoPoco",
+    "commodetto/Convert": "$(COMMODETTO)/commodettoConvert",
+    "commodetto/*": "$(COMMODETTO)/commodettoPocoBlit",
+    "commodetto/cfe": "$(COMMODETTO)/cfeBMF"
   },
-  "preload": ["neopixel"],
+  "resources": {
+		"*": "./assets/*",
+	},
+  "preload": ["commodetto/*", "neopixel", "neomatrix", "neomatrix-render"],
   "platforms": {
     "esp32": {
       "modules": {
