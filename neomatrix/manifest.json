@@ -10,7 +10,8 @@
   },
   "defines": {
     "neomatrix": {
-      "pin": 21
+      "pin": 21,
+      "brightness": 32
     }
   },
   "modules": {

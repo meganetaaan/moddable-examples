@@ -107,6 +107,10 @@ export default class NeoMatrixRender {
     return this.#pixelFormat
   }
 
+  set brightness (b) {
+    this.#matrix.brightness = b
+  }
+
   #getConfigurePin() @ "xs_NeoMatrix_get_configure_pin";
 
   #getConfigureWidth() @ "xs_NeoMatrix_get_configure_width";
