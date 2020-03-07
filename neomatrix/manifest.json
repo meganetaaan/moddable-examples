@@ -4,6 +4,15 @@
     "$(MODDABLE)/examples/manifest_base.json",
 		"$(MODDABLE)/examples/manifest_commodetto.json"
   ],
+  "config": {
+		"screen": "neomatrix-render",
+    "touch": ""
+  },
+  "defines": {
+    "neomatrix": {
+      "pin": 21
+    }
+  },
   "modules": {
     "*": [
       "$(MODULES)/drivers/neopixel/*",
@@ -21,7 +30,7 @@
     "commodetto/cfe": "$(COMMODETTO)/cfeBMF"
   },
   "resources": {
-		"*": "./assets/*",
+		"*": "./assets/*"
 	},
   "preload": ["commodetto/*", "neopixel", "neomatrix", "neomatrix-render"],
   "platforms": {

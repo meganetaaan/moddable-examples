@@ -1,23 +1,28 @@
 import NeoPixel from 'neopixel'
 
-const Timing_WS2812B = {
-    mark:  { level0: 1, duration0: 900,  level1: 0, duration1: 350, },
-    space: { level0: 1, duration0: 350,   level1: 0, duration1: 900, },
-    reset: { level0: 0, duration0: 100, level1: 0, duration1: 100 }};
+const TIMING_WS2812B = {
+  mark: { level0: 1, duration0: 900, level1: 0, duration1: 350 },
+  space: { level0: 1, duration0: 350, level1: 0, duration1: 900 },
+  reset: { level0: 0, duration0: 100, level1: 0, duration1: 100 }
+}
+Object.freeze(TIMING_WS2812B)
+Object.freeze(TIMING_WS2812B.mark)
+Object.freeze(TIMING_WS2812B.space)
+Object.freeze(TIMING_WS2812B.reset)
 
 export class NeoMatrix {
-  constructor ({ height, width, pin, timing, order }) {
+  constructor ({ height, width, pin, timing, order, brightness }) {
     this.length = height * width
     this.height = height
     this.width = width
-    this.timing = timing ? timing : Timing_WS2812B
+    this.timing = timing || TIMING_WS2812B
     this.neoPixel = new NeoPixel({
       length: this.length,
       pin,
       timing: this.timing,
       order
     })
-    this.neoPixel.brightness = 32
+    this.neoPixel.brightness = brightness || 32
   }
   setPixel (x, y, color) {
     const a = x * this.width
@@ -50,3 +55,5 @@ export class NeoMatrix {
     this.neoPixel.close()
   }
 }
+
+Object.freeze(NeoMatrix.prototype)
