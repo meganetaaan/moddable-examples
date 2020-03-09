@@ -2,46 +2,22 @@
   "build": {},
   "include": [
     "$(MODDABLE)/examples/manifest_base.json",
-		"$(MODDABLE)/examples/manifest_commodetto.json"
+    "$(MODDABLE)/examples/manifest_commodetto.json",
+    "./manifest-driver.json"
   ],
   "config": {
 		"screen": "neomatrix-render",
     "touch": ""
   },
-  "defines": {
-    "neomatrix": {
-      "pin": 21,
-      "brightness": 32
-    }
-  },
   "modules": {
-    "*": [
-      "$(MODULES)/drivers/neopixel/*",
-      "./main",
-      "./neomatrix",
-      "./neomatrix-render"
-    ],
-    "commodetto/parseBMF": "$(COMMODETTO)/commodettoParseBMF",
     "commodetto/parseBMP": "$(COMMODETTO)/commodettoParseBMP",
-    "commodetto/parseRLE": "$(COMMODETTO)/commodettoParseRLE",
     "commodetto/Bitmap": "$(COMMODETTO)/commodettoBitmap",
     "commodetto/Poco": "$(COMMODETTO)/commodettoPoco",
-    "commodetto/Convert": "$(COMMODETTO)/commodettoConvert",
     "commodetto/*": "$(COMMODETTO)/commodettoPocoBlit",
-    "commodetto/cfe": "$(COMMODETTO)/cfeBMF"
+    "*": "./main"
   },
   "resources": {
 		"*": "./assets/*"
 	},
-  "preload": ["commodetto/*", "neopixel", "neomatrix", "neomatrix-render"],
-  "platforms": {
-    "esp32": {
-      "modules": {
-        "*": "$(MODULES)/drivers/neopixel/esp32/*"
-      }
-    },
-    "...": {
-      "error": "unsupported platform"
-    }
-  }
+  "preload": ["commodetto/*"]
 }
