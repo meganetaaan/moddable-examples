@@ -16,7 +16,6 @@
     ]
   },
   "resources": {
-    "*": "./assets/*",
-    "*-mask": "./assets/fonts/*"
+    "*-alpha": "./assets/fonts/*"
 	}
 }

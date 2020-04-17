@@ -22,12 +22,13 @@ const fluid = {
 }
 
 const TextStyle = Style.template({
-  font: 'k8x12',
+  font: 'cg-pixel-4x5',
+  // font: 'k8x12',
   color: 'green',
   horizontal: 'left'
 })
 
-const letter = '週末も、不要不きゅうの外出は控えて、三密を避けて行動しましょう。進捗どうですか？'
+const letter = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 let LoveApplication = Application.template((_) => ({
   top: 0,
@@ -49,7 +50,8 @@ let LoveApplication = Application.template((_) => ({
 export default function () {
   /* eslint-disable no-new */
   new LoveApplication(null, {
-    pixels: 256,
+    pixels: 25,
+    // pixels: 256,
     displayListLength: 4096 * 10,
     touchCount: 0
   })

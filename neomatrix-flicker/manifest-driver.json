@@ -5,9 +5,9 @@
   },
   "defines": {
     "neomatrix": {
-      "pin": 26,
-      "width": 16,
-      "height": 16,
+      "pin": 27,
+      "width": 5,
+      "height": 5,
       "brightness": 32
     }
   },

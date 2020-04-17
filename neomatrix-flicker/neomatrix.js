@@ -11,7 +11,7 @@ Object.freeze(TIMING_WS2812B.space)
 Object.freeze(TIMING_WS2812B.reset)
 
 export class NeoMatrix {
-  constructor ({ height, width, pin, timing, order, brightness }) {
+  constructor ({ height, width, pin, timing, order, brightness, direction = 0 }) {
     this.length = height * width
     this.height = height
     this.width = width
@@ -23,10 +23,13 @@ export class NeoMatrix {
       order
     })
     this.neoPixel.brightness = brightness || 32
+    this.direction = direction
   }
   setPixel (x, y, color) {
     const a = x * this.width
-    const b = x & 1 ? this.height - y - 1 : y
+    const b = this.direction === 0
+      ? (this.height - y - 1)
+      : x & 1 ? this.height - y - 1 : y
     const i = a + b
     this.neoPixel.setPixel(i, color)
   }
