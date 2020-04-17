@@ -1,0 +1,22 @@
+{
+  "build": {},
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+		"$(MODDABLE)/examples/manifest_piu.json",
+    "./manifest-driver.json"
+  ],
+  "config": {
+		"screen": "neomatrix-render",
+    "touch": ""
+  },
+  "modules": {
+    "*": [
+      "./main",
+      "./marquee-label"
+    ]
+  },
+  "resources": {
+    "*": "./assets/*",
+    "*-mask": "./assets/fonts/*"
+	}
+}
