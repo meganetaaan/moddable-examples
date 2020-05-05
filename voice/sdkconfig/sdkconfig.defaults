@@ -1,0 +1,1 @@
+COMPONENT_ADD_LDFLAGS += $(COMPONENT_PATH)/libaquestalk.a

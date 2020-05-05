@@ -1,0 +1,12 @@
+{
+  "build": {
+    "CURRENT": "/home/sisikawa/ghq/github.com/meganetaaan/moddable-examples/voice",
+    "SDKCONFIGPATH": "$(CURRENT)/sdkconfig"
+  },
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json"
+  ],
+  "modules": {
+    "*": ["./main", "./aquestalk"]
+  }
+}
