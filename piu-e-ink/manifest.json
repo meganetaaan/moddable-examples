@@ -10,9 +10,10 @@
 	"resources":{
 		"*-mask": [
 			"./fonts/*",
-			"./eink",
-			"./love",
-			"./moddable"
+			"./images/dog"
+		],
+		"*": [
+			"./images/jobs"
 		]
 	},
 	"config": {
