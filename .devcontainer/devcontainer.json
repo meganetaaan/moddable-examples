@@ -1,0 +1,12 @@
+{
+	"name": "Moddable ESP32",
+	"dockerComposeFile": [
+		"docker-compose.yml"
+	],
+	"service": "dev",
+	"workspaceFolder": "/workspace",
+	"settings": { 
+		"terminal.integrated.shell.linux": null
+	},
+	"extensions": []
+}
