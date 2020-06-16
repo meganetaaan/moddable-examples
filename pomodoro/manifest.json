@@ -1,0 +1,17 @@
+{
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/examples/manifest_piu.json"
+  ],
+  "modules": {
+    "*": ["./main", "./pomodoro"]
+  },
+  "preload": [
+    "pomodoro"
+  ],
+  "resources": {
+		"*-alpha": [
+			"$(MODDABLE)/examples/assets/fonts//OpenSans-Regular-52"
+		]
+  }
+}
