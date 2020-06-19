@@ -13,21 +13,39 @@ function msecToTime(msec) {
 }
 
 const timeLabel = new Label(null, {
-      style: new Style({ font: FONT, color: 'white' }),
-      skin: new Skin({ fill: 'black' }),
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      string: '0'
+  style: new Style({ font: FONT, color: 'black' }),
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+  string: 'pomodoro'
+})
+
+class ImageBehavior extends Behavior {
+  onDisplaying(image) {
+    image.start();
+  }
+}
+
+const image = new Image(null, {
+  bottom: 0,
+  left: 0,
+  path: 'parrot.cs',
+  loop: true,
+  Behavior: ImageBehavior
 })
 
 const application = new Application(null, {
-  contents: [timeLabel]
+  contents: [image, timeLabel],
+  displayListLength: 4096,
+  touchCount: 0,
+  skin: new Skin({
+    fill: '#FFFFFF'
+  })
 })
 
 const pomodoro = new Pomodoro()
-pomodoro.onTick = function(time) {
+pomodoro.onTick = function (time) {
   const t = msecToTime(time)
   const m = String(t.minutes).padStart(2, '0')
   const s = String(t.seconds).padStart(2, '0')
