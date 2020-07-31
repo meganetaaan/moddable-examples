@@ -40,6 +40,10 @@ Image by <a href="https://pixabay.com/users/obBilder-3192627/?utm_source=link-at
 
 ボタンを押すとカウントアップするカウンターです。
 
+### pomodoro
+
+ポモドーロタイマーです。
+
 ### unit/env
 
 温湿度計のサンプルです。
