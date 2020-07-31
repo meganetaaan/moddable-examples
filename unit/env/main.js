@@ -3,14 +3,14 @@
 import { Application, Style, Skin, Label, Column } from 'piu/MC'
 import { rgb } from 'piu/All'
 import temperatureToColor from 'temperatureToColor'
-import DHT12 from 'dht12'
+import SHT3X from 'sht3x'
 import Timer from 'timer'
 
 if (global.power) {
   global.power.setBrightness(8)
 }
 
-const dht12 = new DHT12()
+const sht3x = new SHT3X()
 const INTERVAL = 2000
 const center = { top: 0, bottom: 0, left: 0, right: 0 }
 
@@ -38,7 +38,7 @@ const application = new Application(null, {
 trace(application)
 
 Timer.repeat((_) => {
-  const env = dht12.readEnvironment()
+  const env = sht3x.readEnvironment()
   temperatureLabel.string = `${env.temperature.toFixed(1)}C`
   temperatureLabel.skin = new Skin({ fill: temperatureToColor(env.temperature) })
 
