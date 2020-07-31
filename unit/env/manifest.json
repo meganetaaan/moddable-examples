@@ -8,7 +8,7 @@
     "*": ["$(MODDABLE)/modules/pins/i2c/esp32/*", "./*"],
     "pins/i2c": "$(MODDABLE)/modules/pins/i2c/i2c"
   },
-  "preload": "pins/i2c",
+  "preload": ["pins/i2c", "dht12", "sht3x"],
   "platforms": {
     "esp32/m5stack": {
       "defines": {
