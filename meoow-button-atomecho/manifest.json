@@ -1,0 +1,23 @@
+{
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/examples/manifest_net.json"
+  ],
+  "modules": {
+    "*": [
+      "$(MODULES)/drivers/neopixel/*",
+      "$(MODULES)/drivers/neopixel/esp32/*",
+      "$(MODULES)/network/http/*",
+      "./main"
+    ]
+  },
+  "preload": [
+    "neopixel",
+    "http"
+  ],
+  "resources": {
+    "*": [
+      "./assets/sounds/*"
+    ]
+  }
+}
