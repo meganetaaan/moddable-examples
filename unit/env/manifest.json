@@ -11,27 +11,21 @@
   "preload": ["pins/i2c", "dht12", "sht3x"],
   "platforms": {
     "esp32/m5stack": {
-      "defines": {
-        "i2c": {
-          "sda_pin": 21,
-          "scl_pin": 22
-        }
+      "config": {
+        "unit_sda": 21,
+        "unit_scl": 22
       }
     },
     "esp32/m5stack_fire": {
-      "defines": {
-        "i2c": {
-          "sda_pin": 21,
-          "scl_pin": 22
-        }
+      "config": {
+        "unit_sda": 21,
+        "unit_scl": 22
       }
     },
     "esp32/m5stick_c": {
-      "defines": {
-        "i2c": {
-          "sda_pin": 32,
-          "scl_pin": 33
-        }
+      "config": {
+        "unit_sda": 0,
+        "unit_scl": 26
       }
     }
   },

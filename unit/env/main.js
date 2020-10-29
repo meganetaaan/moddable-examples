@@ -2,15 +2,19 @@
 
 import { Application, Style, Skin, Label, Column } from 'piu/MC'
 import { rgb } from 'piu/All'
+import config from 'mc/config'
 import temperatureToColor from 'temperatureToColor'
-import SHT3X from 'sht3x'
+import EnvSensor from 'dht12'
 import Timer from 'timer'
 
 if (global.power) {
   global.power.setBrightness(8)
 }
 
-const sht3x = new SHT3X()
+const envSensor = new EnvSensor({
+  sda: config.unit_sda,
+  scl: config.unit_scl,
+})
 const INTERVAL = 2000
 const center = { top: 0, bottom: 0, left: 0, right: 0 }
 
@@ -38,7 +42,7 @@ const application = new Application(null, {
 trace(application)
 
 Timer.repeat((_) => {
-  const env = sht3x.readEnvironment()
+  const env = envSensor.readEnvironment()
   temperatureLabel.string = `${env.temperature.toFixed(1)}C`
   temperatureLabel.skin = new Skin({ fill: temperatureToColor(env.temperature) })
 

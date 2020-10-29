@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Shinya Ishikawa
+ * Copyright (c) 2019-2020 Shinya Ishikawa
  *
  */
 import I2C from 'pins/i2c'
@@ -18,15 +18,15 @@ const SCALE = {
 Object.freeze(SCALE);
 
 export default class SHT3X extends I2C {
-  constructor (dictionary = { address: 0x44, scale: SCALE.CELSIUS }) {
-    super(dictionary)
-    this._scale = dictionary.scale
+  constructor(dictionary) {
+    super({ address: 0x44, ...dictionary })
+    this._scale = dictionary.scale ?? SCALE.CELSIUS
   }
 
   readEnvironment (s = this._scale) {
     this.write(...REGISTORY.READ)
     Timer.delay(20);
-    
+
     const bytes = this.read(6)
     const cTemp = ((((bytes[0] << 8) + bytes[1]) * 175) / 65535) - 45
     let temperature
