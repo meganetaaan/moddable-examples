@@ -1,9 +1,14 @@
 version: '3'
 services:
   dev:
-    image: meganetaaan/moddable-esp32
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: tiryoh/moddable-esp32-nodejs
     privileged: true
     network_mode: host
+    ports:
+      - "8080"
     volumes:
       - /dev:/dev
       - ../:/workspace:cached
