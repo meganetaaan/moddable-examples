@@ -1,0 +1,18 @@
+{
+	"include": [
+		"$(MODDABLE)/examples/manifest_base.json",
+		"$(MODDABLE)/examples/manifest_net.json",
+		"$(MODDABLE)/modules/network/mqtt/manifest.json",
+		"./vl53l0x/manifest.json"
+	],
+	"config": {
+		"mqtt": {
+			"host": "your-mqtt-server.local"
+		}
+	},
+	"modules": {
+		"*": [
+			"./main"
+		]
+	}
+}

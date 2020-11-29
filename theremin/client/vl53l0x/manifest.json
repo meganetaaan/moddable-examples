@@ -1,0 +1,11 @@
+{
+	"include": [
+		"$(MODULES)/pins/smbus/manifest.json"
+	],
+	"modules": {
+		"vl53l0x": "$(MODULES)/drivers/vl53l0x/vl53l0x"
+	},
+	"preload": [
+		"vl53l0x"
+	]
+}
