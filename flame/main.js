@@ -13,8 +13,10 @@
  */
 import NeoPixel from "neopixel";
 import Timer from "timer";
+import Digital from "pins/digital";
+import Monitor from "pins/digital/monitor";
 
-const np = new NeoPixel({length: 16 * 16, pin: 25, order: "GRB"});
+const np = new NeoPixel({length: 8 * 8, pin: 25, order: "GRB"});
 np.brightness = 64
 const COOLING = 12
 
@@ -74,8 +76,8 @@ class Flame {
 			for (i = 0; i < this.height; i++) {
 				color = this.color(j, i)
 				a = j * this.height
-				b = j & 1 ? this.width - i - 1 : i
-				// b = i
+				// b = j & 1 ? this.width - i - 1 : i
+				b = i
 				idx = a + b
 				this.np.setPixel(idx, color)
 			}
@@ -95,10 +97,25 @@ class Flame {
 	}
 }
 
+class Button extends Monitor {
+	constructor(pin) {
+		super({pin, mode: Digital.InputPullUp, edge: Monitor.Rising | Monitor.Falling});
+		this.onChanged = this.nop;
+	}
+	nop() {
+	}
+}
+
 let tick = 15
-const flame = new Flame(16, 16, np)
+const monitor = new Button(39)
+monitor.onChanged = function() {
+	if (this.read()) {
+		tick = (tick + 30) % 360
+	}
+}
+
+const flame = new Flame(8, 8, np)
 Timer.repeat(() => {
-	tick = (tick + 1) % 360
 	flame.hue = tick
 	flame.draw()
 }, 33);
