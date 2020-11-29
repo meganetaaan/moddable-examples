@@ -1,0 +1,11 @@
+{
+  "name": "moddable-examples-mai5-ble-central",
+  "private": true,
+  "author": "Shinya Ishikawa",
+  "scripts": {
+    "start": "http-server"
+  },
+  "devDependencies": {
+    "http-server": "^0.12.3"
+  }
+}
