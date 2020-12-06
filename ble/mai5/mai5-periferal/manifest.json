@@ -4,6 +4,9 @@
 		"$(MODDABLE)/examples/manifest_piu.json",
 		"$(MODDABLE)/modules/network/ble/manifest_server.json"
 	],
+	"config": {
+		"isFather": true
+	},
 	"modules": {
 		"piu/Sound": [
 			"$(MODULES)/piu/MC/piuSound"

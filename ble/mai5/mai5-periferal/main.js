@@ -1,7 +1,17 @@
 /* global screen, trace */
 import Mai5Server from 'mai5-server'
 import { Application, Style, Skin, Label, Content } from 'piu/MC'
-import Sound from 'piu/Sound'
+import AudioOut from "pins/audioout"
+import Resource from 'Resource'
+import config from 'mc/config'
+
+const voices = {
+  CONNECTED_01: new Resource('CONNECTED_01.maud'),
+  DISCONNECTED_00: new Resource('DISCONNECTED_00.maud'),
+  DISCONNECTED_01: new Resource('DISCONNECTED_01.maud'),
+  DISCONNECTED_02: new Resource('DISCONNECTED_02.maud')
+}
+const parent = config.isFather ? new Resource('FATHER.maud') : new Resource('MOTHER.maud')
 
 const FONT = 'OpenSans-Regular-20'
 
@@ -38,8 +48,15 @@ const server = new Mai5Server()
 server.onConnect = () => {
   trace('connected\n')
   application.content('label').string = 'connected'
+  speaker.enqueue(0, AudioOut.Samples, parent);
+  speaker.enqueue(0, AudioOut.Samples, voices.CONNECTED_01);
+  speaker.enqueue(0, AudioOut.Callback, 0);
+  speaker.start();
 }
 server.onDisconnect = () => {
   trace('disconnected\n')
   application.content('label').string = 'disconnected'
+  speaker.enqueue(0, AudioOut.Samples, voices.DISCONNECTED_00);
+  speaker.enqueue(0, AudioOut.Callback, 0);
+  speaker.start();
 }

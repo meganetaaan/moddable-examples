@@ -7,7 +7,7 @@ const SERVICE_UUID = '06cbe1e7-f2b7-3646-f601-7a78193af9bd' // sendqr service
 class Mai5Server extends BLEServer {
   onReady () {
     this.deviceName = DEVICE_NAME
-    this.onDisconnected()
+    this.start()
   }
   onConnected (connection) {
     this.stopAdvertising()
@@ -15,10 +15,7 @@ class Mai5Server extends BLEServer {
       this.onConnect()
     }
   }
-  onDisconnected (connection) {
-    if (typeof this.onDisconnect === 'function') {
-      this.onDisconnect()
-    }
+  start() {
     this.startAdvertising({
       advertisingData: {
         flags: 6,
@@ -26,6 +23,12 @@ class Mai5Server extends BLEServer {
         completeUUID128List: [uuid([SERVICE_UUID])]
       }
     })
+  }
+  onDisconnected (connection) {
+    if (typeof this.onDisconnect === 'function') {
+      this.onDisconnect()
+    }
+    this.start()
   }
 }
 
