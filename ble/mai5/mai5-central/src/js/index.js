@@ -7,14 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
   bleClient.onConnected = () => {
     const contents = document.querySelectorAll('.ble-status,.guide')
     for (let c of contents) {
-      c.classList.remove(['disconnected', 'initial'])
+      c.classList.remove('disconnected', 'initial')
       c.classList.add('connected')
     }
   }
   bleClient.onDisconnected = () => {
     const contents = document.querySelectorAll('.ble-status,.guide')
     for (let c of contents) {
-      c.classList.remove(['connected', 'initial'])
+      c.classList.remove('connected', 'initial')
       c.classList.add('disconnected')
     }
   }
