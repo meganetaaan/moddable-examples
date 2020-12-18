@@ -1,48 +1,60 @@
-/*
-* Copyright (c) 2016-2020 Moddable Tech, Inc.
-*
-*   This file is part of the Moddable SDK.
-*
-*   This work is licensed under the
-*       Creative Commons Attribution 4.0 International License.
-*   To view a copy of this license, visit
-*       <https://creativecommons.org/licenses/by/4.0>
-*   or send a letter to Creative Commons, PO Box 1866,
-*   Mountain View, CA 94042, USA.
-*
-*/
+/* global trace */
 
-import Client from "mqtt";
-import Net from "net";
-import Timer from "timer";
-import config from "mc/config";
-import ToF from "vl53l0x"
+import { Client } from 'websocket'
+import Timer from 'timer'
+import ToF from 'vl53l0x'
 
-let mqtt  = new Client({
-	host: config.mqtt.host,
-	port: 1883,
-	id: "moddable_" + Net.get("MAC"),
-});
+const EVENT_NAME = 'm5stack/tone'
+const FPS = 15
+const MIN_DISTANCE = 50
+const MAX_DISTANCE = 500
+const KEY_A = 440
+const a = -1 / 450
+const b = 10 / 9
 
-let sensor = new ToF
+let socket = new Client({
+  host: '192.168.7.112',
+  port: 8080
+})
+let sensor = new ToF()
+let timer = null
 
-const TOPIC_NAME = "m5stack/accel-gyro"
-
-function loop() {
-	let mm = sensor.value
+function clamp (value, min, max) {
+  return Math.floor(Math.min(max, Math.max(value, min)))
 }
 
-mqtt.onReady = function() {
-	Timer.repeat(loop, 1000 / FPS)
-};
+function getTone (mm) {
+  const d = clamp(mm, MIN_DISTANCE, MAX_DISTANCE)
+  return KEY_A * Math.pow(2, d * a + b)
+}
 
-mqtt.onClose = function() {
-	trace('lost connection to server\n');
-	if (this.timer) {
-		Timer.clear(this.timer);
-		delete this.timer;
-	}
-};
+function loop () {
+  const mm = sensor.value
+  const message = String(getTone(mm))
+  socket.write(message)
+}
 
-const message = JSON.stringify({x, y, z, stamp: Date.now()})
-mqtt.publish(TOPIC_NAME, message)
+socket.callback = function (message, value) {
+  switch (message) {
+    case Client.connect:
+      trace('socket connect\n')
+      timer = Timer.repeat(loop, 1000 / FPS)
+      break
+
+    case Client.handshake:
+      trace('websocket handshake success\n')
+      break
+
+    case Client.receive:
+      trace(`websocket message received: ${value}\n`)
+      break
+
+    case Client.disconnect:
+      trace('websocket close\n')
+      if (timer != null) {
+        Timer.clear(timer)
+        timer = null
+      }
+      break
+  }
+}

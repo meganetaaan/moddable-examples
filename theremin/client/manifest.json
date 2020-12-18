@@ -1,18 +1,18 @@
 {
-	"include": [
-		"$(MODDABLE)/examples/manifest_base.json",
-		"$(MODDABLE)/examples/manifest_net.json",
-		"$(MODDABLE)/modules/network/mqtt/manifest.json",
-		"./vl53l0x/manifest.json"
-	],
-	"config": {
-		"mqtt": {
-			"host": "your-mqtt-server.local"
-		}
-	},
-	"modules": {
-		"*": [
-			"./main"
-		]
-	}
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/examples/manifest_net.json",
+    "./vl53l0x/manifest.json"
+  ],
+  "modules": {
+    "*": [
+      "./main",
+      "$(MODULES)/network/websocket/*",
+      "$(MODULES)/data/base64/*",
+      "$(MODULES)/data/logical/*",
+      "$(MODULES)/crypt/digest/*",
+      "$(MODULES)/crypt/digest/kcl/*"
+    ]
+  },
+  "preload": ["websocket", "base64", "digest", "logical"]
 }
