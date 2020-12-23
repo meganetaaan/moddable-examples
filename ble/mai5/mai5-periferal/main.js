@@ -16,14 +16,14 @@ const parent = config.isFather ? new Resource('FATHER.maud') : new Resource('MOT
 const FONT = 'OpenSans-Regular-20'
 
 const faceTexture = new Texture('face.png')
-const FaceSkin = Skin.template({
-  texture: faceTexture,
-  width: 320,
-  height: 240
-})
+const sadFaceTexture = new Texture('face.png')
+const skins = {
+  happy: new Skin({ width: 320, height: 240, texture: faceTexture}),
+  sad: new Skin({ width: 320, height: 240, texture: sadFaceTexture})
+}
 const Mai5Face = Content.template(() => ({
   name: 'face',
-  Skin: FaceSkin
+  skin: skins.happy
 }))
 
 const Mai5Label = Label.template(() => ({
@@ -47,6 +47,7 @@ const application = new Application(null, {
 const server = new Mai5Server()
 server.onConnect = () => {
   trace('connected\n')
+  application.content('face').skin = skins.happy
   application.content('label').string = 'connected'
   speaker.enqueue(0, AudioOut.Samples, parent);
   speaker.enqueue(0, AudioOut.Samples, voices.CONNECTED_01);
@@ -55,6 +56,7 @@ server.onConnect = () => {
 }
 server.onDisconnect = () => {
   trace('disconnected\n')
+  application.content('face').skin = skins.sad
   application.content('label').string = 'disconnected'
   speaker.enqueue(0, AudioOut.Samples, voices.DISCONNECTED_00);
   speaker.enqueue(0, AudioOut.Callback, 0);
