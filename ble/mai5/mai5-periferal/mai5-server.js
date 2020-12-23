@@ -2,7 +2,7 @@ import BLEServer from 'bleserver'
 import { uuid } from 'btutils'
 
 const DEVICE_NAME = 'Mai5'
-const SERVICE_UUID = '06cbe1e7-f2b7-3646-f601-7a78193af9bd' // sendqr service
+const SERVICE_UUID = '06cbe1e7-f2b7-3646-f601-7a78193af9bd'
 
 class Mai5Server extends BLEServer {
   onReady () {
