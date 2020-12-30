@@ -6,13 +6,7 @@
   "modules": {
     "*": [
       "./main",
-      "./neomatrix",
-      "$(MODDABLE)/modules/pins/digital/*",
-      "$(MODDABLE)/modules/pins/digital/esp32/*",
-      "$(MODDABLE)/modules/pins/digital/monitor/*",
-      "$(MODDABLE)/modules/pins/digital/monitor/esp32/*",
-      "$(MODDABLE)/modules/drivers/neopixel/*",
-      "$(MODDABLE)/modules/drivers/neopixel/esp32/*"
+      "./neomatrix"
     ]
   }
 }

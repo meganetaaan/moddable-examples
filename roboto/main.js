@@ -1,63 +1,85 @@
 import PWM from 'pins/pwm'
-import Digital from 'digital'
-import Monitor from 'monitor'
 import Timer from 'timer'
 import { NeoMatrix } from 'neomatrix'
 
-const matrix = new NeoMatrix({
-  pin: 27,
-  width: 5,
-  height: 5
-})
+let lights = globalThis.lights
+const BLACK = lights.makeRGB(0, 0, 0)
+const WHITE = lights.makeRGB(255, 255, 255)
+const RED = lights.makeRGB(255, 0, 0)
+const BLUE = lights.makeRGB(0, 0, 255)
+const INTERVAL = 3000
+const ANGLE_MAX = 180
+const ANGLE_MIN = 90
 
-let tick = 0
-let on = true
-
-const pwm = new PWM({
-  pin: 25
-})
-
-const button = new Monitor({
-  pin: 39,
-  mode: Digital.InputPullUp,
-  edge: Monitor.RisingEdge
-})
-button.onChanged = function () {
-  if (this.read()) {
-    on = !on
-  }
+function randomBetween(min, max) {
+  return Math.floor(min + Math.random() * (max - min))
 }
 
-const black = matrix.makeRGB(0, 0, 0)
-const white = matrix.makeRGB(255, 255, 255)
-const red = matrix.makeRGB(255, 0, 0)
-const blue = matrix.makeRGB(0, 0, 255)
+class Roboto {
+  constructor() {
+    this.matrix = new NeoMatrix({
+      lights: globalThis.lights,
+      width: 5,
+      height: 5
+    })
+    this.servo = new PWM({
+      pin: 25
+    })
+    this.active = true
+    trace('init\n')
+    this.handler = Timer.repeat(() => {
+      this.update()
+    }, INTERVAL)
+  }
 
-const render = tick => {
-  matrix.fill(black)
-  for (let x = 0; x < 2; x++) {
-    for (let y = 0; y < matrix.height; y++) {
-      matrix.setPixel(x, y, white)
+  // LEDマトリクス描画
+  renderMatrix(theta) {
+    const matrix = this.matrix
+    // 背景の描画
+    matrix.fill(BLACK)
+    for (let x = 0; x < 2; x++) {
+      for (let y = 0; y < matrix.height; y++) {
+        matrix.setPixel(x, y, WHITE)
+      }
     }
+    matrix.setPixel(0, 3, RED)
+    matrix.setPixel(1, 3, RED)
+    matrix.setPixel(0, 1, BLUE)
+    matrix.setPixel(1, 1, BLUE)
+
+    // 針の描画
+    const t = 4 - Math.floor(5 * (theta - ANGLE_MIN) / (ANGLE_MAX - ANGLE_MIN))
+    trace(`t: ${t}\n`)
+    matrix.setPixel(3, t, WHITE)
+    matrix.setPixel(4, t, WHITE)
+
+    // LEDマトリクスの更新
+    matrix.update()
   }
-  matrix.setPixel(0, 3, red)
-  matrix.setPixel(1, 3, red)
-  matrix.setPixel(0, 1, blue)
-  matrix.setPixel(1, 1, blue)
 
-  const t = Math.floor(5 * tick / 120)
-  matrix.setPixel(3, t, white)
-  matrix.setPixel(4, t, white)
+  // 首振り
+  turnHead(theta) {
+    // 0度で0〜180度で1024に対応
+    const v = Math.floor(theta * 1024 / 180)
+    trace(`v: ${v}\n`)
+    this.servo.write(v)
+  }
 
-  matrix.update()
+  update() {
+    if (!this.active) {
+      return
+    }
+    trace('update\n')
+    const theta = randomBetween(ANGLE_MIN, ANGLE_MAX)
+    trace(`theta: ${theta}\n`)
+    this.renderMatrix(theta)
+    this.turnHead(theta)
+  }
 }
-Timer.repeat(() => {
-  if (!on) {
-    return
-  }
 
-  tick = Math.floor(Math.random() * 120)
-  render(tick)
-  const v = 800 + Math.floor(Math.sin((2 * Math.PI * tick) / 120) * 200)
-  pwm.write(v)
-}, 1000 * 3)
+const roboto = new Roboto
+globalThis.button.a.onChanged = function () {
+  if (this.read()) {
+    roboto.active = !roboto.active
+  }
+}
