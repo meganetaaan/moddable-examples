@@ -15,7 +15,7 @@ class Mai5Server extends BLEServer {
       this.onConnect()
     }
   }
-  start() {
+  start () {
     this.startAdvertising({
       advertisingData: {
         flags: 6,
