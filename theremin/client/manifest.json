@@ -4,6 +4,10 @@
     "$(MODDABLE)/examples/manifest_net.json",
     "./vl53l0x/manifest.json"
   ],
+  "config": {
+    "host": "192.168.7.112",
+    "startupSound": false
+  },
   "modules": {
     "*": [
       "./main",

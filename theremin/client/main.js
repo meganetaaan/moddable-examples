@@ -3,8 +3,8 @@
 import { Client } from 'websocket'
 import Timer from 'timer'
 import ToF from 'vl53l0x'
+import config from 'mc/config'
 
-const EVENT_NAME = 'm5stack/tone'
 const FPS = 15
 const MIN_DISTANCE = 50
 const MAX_DISTANCE = 500
@@ -13,7 +13,7 @@ const a = -1 / 450
 const b = 10 / 9
 
 let socket = new Client({
-  host: '192.168.7.112',
+  host: config.host,
   port: 8080
 })
 let sensor = new ToF()
