@@ -2,21 +2,31 @@ const Express = require('express')
 const app = Express()
 require('express-ws')(app)
 
-let connections = []
+const PORT = 8080
+let sockets = []
+
+// publicディレクトリ配下を配信する
 app.use(Express.static('public'))
+
+// WebSocketエンドポイントの設定
 app.ws('/', function (socket) {
-  connections.push(socket)
-  console.log('connected')
+  sockets.push(socket)
 
   socket.on('message', function (message) {
-    connections.forEach(socket => {
-      socket.send(message)
+    // 他のコネクションにメッセージを送る
+    sockets.forEach(s => {
+      s.send(message)
     })
   })
+
   socket.on('close', () => {
-    connections = connections.filter(s => {
+    // 閉じたコネクションを取り除く
+    sockets = sockets.filter(s => {
       return s !== socket
     })
   })
 })
-app.listen(8080)
+// ポート8080で接続を待ち受ける
+app.listen(PORT, function () {
+  console.log(`listening on port ${PORT}`)
+})

@@ -1,5 +1,5 @@
 const DEVICE_NAME = 'Mai5'
-const SERVICE_UUID = "06cbe1e7-f2b7-3646-f601-7a78193af9bd"
+const SERVICE_UUID = '06cbe1e7-f2b7-3646-f601-7a78193af9bd'
 const CHARACTERISTIC_UUID = '6238b7d5-a703-b588-3b0e-6858ba72fd65'
 
 class BLEClient {
