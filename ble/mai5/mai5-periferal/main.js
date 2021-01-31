@@ -122,19 +122,15 @@ server.onDisconnect = () => {
   trace('disconnected\n')
   application.content('face').content('mouth').variant = 0 // sad face
   application.content('label').string = 'disconnected'
+  speaker.enqueue(0, AudioOut.Samples, voices.DISCONNECTED_00)
+  speaker.start()
   count = 0
   timer = Timer.repeat(() => {
-    if (count % 2 === 0) {
-      speaker.enqueue(0, AudioOut.Samples, parent)
-      speaker.enqueue(0, AudioOut.Samples, voices.DISCONNECTED_01)
-    } else {
-      speaker.enqueue(0, AudioOut.Samples, parent)
-      speaker.enqueue(0, AudioOut.Samples, voices.DISCONNECTED_02)
-    }
+    const message = count % 2 === 0 ? voices.DISCONNECTED_01 : voices.DISCONNECTED_02
+    speaker.enqueue(0, AudioOut.Samples, parent)
+    speaker.enqueue(0, AudioOut.Samples, message)
     speaker.enqueue(0, AudioOut.Callback, 0)
     speaker.start()
     count++
   }, 10_000)
-  speaker.enqueue(0, AudioOut.Samples, voices.DISCONNECTED_00)
-  speaker.start()
 }
