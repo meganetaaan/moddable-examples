@@ -1,4 +1,5 @@
-import PWM from 'pins/pwm'
+/* global globalThis */
+import Servo from 'pins/servo'
 import Timer from 'timer'
 import { NeoMatrix } from 'neomatrix'
 
@@ -8,8 +9,8 @@ const WHITE = lights.makeRGB(255, 255, 255)
 const RED = lights.makeRGB(255, 0, 0)
 const BLUE = lights.makeRGB(0, 0, 255)
 const INTERVAL = 3000
-const ANGLE_MAX = 180
-const ANGLE_MIN = 90
+const ANGLE_MAX = 30
+const ANGLE_MIN = 0
 
 function randomBetween(min, max) {
   return Math.floor(min + Math.random() * (max - min))
@@ -22,8 +23,10 @@ class Roboto {
       width: 5,
       height: 5
     })
-    this.servo = new PWM({
-      pin: 25
+    this.servo = new Servo({
+      pin: 25,
+      min: 500,
+      max: 2400
     })
     this.active = true
     trace('init\n')
@@ -60,9 +63,10 @@ class Roboto {
   // 首振り
   turnHead(theta) {
     // 0度で0〜180度で1024に対応
-    const v = Math.floor(theta * 1024 / 180)
-    trace(`v: ${v}\n`)
-    this.servo.write(v)
+    // const v = Math.floor(theta * 1024 / 180)
+    // trace(`v: ${v}\n`)
+    // this.servo.write(v)
+    this.servo.write(theta)
   }
 
   update() {
