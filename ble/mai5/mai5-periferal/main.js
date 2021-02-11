@@ -19,14 +19,14 @@ speaker.callback = function() {
   this.stop()
 }
 const voices = {
-  CONNECTED_01: new Resource('CONNECTED_01.maud'),
-  DISCONNECTED_00: new Resource('DISCONNECTED_00.maud'),
-  DISCONNECTED_01: new Resource('DISCONNECTED_01.maud'),
-  DISCONNECTED_02: new Resource('DISCONNECTED_02.maud')
+  KARA_HANARENAIDENE: new Resource('KARA_HANARENAIDENE.maud'),
+  MAIGO: new Resource('MAIGO.maud'),
+  TTE_YONDEMITE: new Resource('TTE_YONDEMITE.maud'),
+  WO_SAGASHITENE: new Resource('WO_SAGASHITENE.maud')
 }
 const parent = config.isFather
-  ? new Resource('FATHER.maud')
-  : new Resource('MOTHER.maud')
+  ? new Resource('OTOSAN.maud')
+  : new Resource('OKASAN.maud')
 
 const FONT = 'OpenSans-Regular-20'
 const BLACK = '#202020'
@@ -114,7 +114,7 @@ server.onConnect = () => {
   application.content('face').content('mouth').variant = 1 // happy face
   application.content('label').string = 'connected'
   speaker.enqueue(0, AudioOut.Samples, parent)
-  speaker.enqueue(0, AudioOut.Samples, voices.CONNECTED_01)
+  speaker.enqueue(0, AudioOut.Samples, voices.KARA_HANARENAIDENE)
   speaker.enqueue(0, AudioOut.Callback, 0)
   speaker.start()
 }
@@ -122,11 +122,11 @@ server.onDisconnect = () => {
   trace('disconnected\n')
   application.content('face').content('mouth').variant = 0 // sad face
   application.content('label').string = 'disconnected'
-  speaker.enqueue(0, AudioOut.Samples, voices.DISCONNECTED_00)
+  speaker.enqueue(0, AudioOut.Samples, voices.MAIGO)
   speaker.start()
   count = 0
   timer = Timer.repeat(() => {
-    const message = count % 2 === 0 ? voices.DISCONNECTED_01 : voices.DISCONNECTED_02
+    const message = count % 2 === 0 ? voices.WO_SAGASHITENE : voices.TTE_YONDEMITE
     speaker.enqueue(0, AudioOut.Samples, parent)
     speaker.enqueue(0, AudioOut.Samples, message)
     speaker.enqueue(0, AudioOut.Callback, 0)
