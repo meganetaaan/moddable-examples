@@ -1,0 +1,12 @@
+{
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/modules/pins/servo/manifest.json"
+  ],
+  "modules": {
+    "*": [
+      "./main",
+      "./neomatrix"
+    ]
+  }
+}

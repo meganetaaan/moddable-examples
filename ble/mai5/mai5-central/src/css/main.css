@@ -1,0 +1,105 @@
+html,body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background-color: #F2F2F2;
+    font-family: Quicksand, 游ゴシック体, "Yu Gothic", YuGothic, "ヒラギノ角ゴシック Pro", "Hiragino Kaku Gothic Pro", メイリオ, Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+    color: #222;
+}
+
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #009688;
+    box-shadow: 0 3px 6px #0002;
+    color: #FAFAFA;
+}
+
+main {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 32px;
+}
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.ble-connect-button {
+    width: 30vw;
+    height: 30vw;
+    border-radius: 20%;
+    border: none;
+    box-shadow: 0 3px 6px #0002;
+}
+
+.guide.initial::before {
+    color: #222;
+    top: 0px;
+    content: "Click to connect"
+}
+
+.guide {
+    font-size: 1.5em;
+}
+.guide.connected::before {
+    content: "Connected"
+}
+
+.guide.disconnected::before {
+    content: "Disconnected"
+}
+
+.ble-status {
+    background-size: cover;
+}
+
+.ble-status.initial{
+    background-image: url("../assets/initial.png");
+}
+
+.ble-status.connected{
+    background-image: url("../assets/connected.png");
+}
+
+.ble-status.disconnected{
+    background-image: url("../assets/disconnected.png");
+}
+
+h1,h2,h3,h4,h5 {
+    margin: 0;
+}
+
+h1 {
+    font-size: 1.6em;
+}
+
+h2 {
+    font-size: 1.2em;
+}
+
+.title {
+    margin: 0 auto;
+}

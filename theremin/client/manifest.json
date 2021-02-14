@@ -1,0 +1,22 @@
+{
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/examples/manifest_net.json",
+    "./vl53l0x/manifest.json"
+  ],
+  "config": {
+    "host": "192.168.7.112",
+    "startupSound": false
+  },
+  "modules": {
+    "*": [
+      "./main",
+      "$(MODULES)/network/websocket/*",
+      "$(MODULES)/data/base64/*",
+      "$(MODULES)/data/logical/*",
+      "$(MODULES)/crypt/digest/*",
+      "$(MODULES)/crypt/digest/kcl/*"
+    ]
+  },
+  "preload": ["websocket", "base64", "digest", "logical"]
+}

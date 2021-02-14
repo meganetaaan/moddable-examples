@@ -1,0 +1,14 @@
+{
+    "service": {
+        "uuid": "06cbe1e7-f2b7-3646-f601-7a78193af9bd",
+        "characteristics": {
+            "kid-id": {
+                "uuid": "6238b7d5-a703-b588-3b0e-6858ba72fd65",
+                "maxBytes": 512,
+                "type": "string",
+                "permissions": "read",
+                "properties": "read"
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+{
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+		"$(MODDABLE)/examples/manifest_piu.json",
+    "$(MODDABLE)/modules/pins/digital/manifest.json"
+  ],
+	"resources":{
+		"*-alpha": [
+			"$(MODDABLE)/examples/assets/fonts//OpenSans-Semibold-20"
+    ],
+    "*": ["./images/*"]
+	},
+  "modules": {
+    "*": ["./main"]
+  }
+}

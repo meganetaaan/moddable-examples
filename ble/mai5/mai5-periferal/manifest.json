@@ -1,0 +1,34 @@
+{
+	"include": [
+		"$(MODDABLE)/examples/manifest_base.json",
+		"$(MODDABLE)/examples/manifest_piu.json",
+		"$(MODDABLE)/modules/network/ble/manifest_server.json"
+	],
+	"config": {
+		"isFather": true
+	},
+	"modules": {
+		"piu/Sound": [
+			"$(MODULES)/piu/MC/piuSound"
+		],
+		"*": [
+			"./*"
+		]
+	},
+  "resources": {
+		"*-alpha": [
+			"$(MODDABLE)/examples/assets/fonts//OpenSans-Regular-20",
+			"./assets/eyes",
+			"./assets/mouth"
+		],
+		"*": ["./assets/*"]
+  },
+	"preload": [
+		"mai5-server"
+	],
+	"ble": {
+		"*": [
+			"./bleservices/*"
+		]
+	}
+}

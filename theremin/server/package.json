@@ -1,0 +1,18 @@
+{
+  "name": "server",
+  "version": "0.1.0",
+  "description": "Moddable theremin server",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-ws": "^4.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "meganetaaan",
+  "license": "MIT",
+  "private": true
+}

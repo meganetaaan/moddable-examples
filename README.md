@@ -1,4 +1,6 @@
-# ModdableでつくるIoTアプリケーション（仮） サンプルコード集
+# Moddableサンプルコード集
+
+M5StackとModdableを使ったサンプルコード集です。
 
 ## 必要環境（Prerequisities）
 
