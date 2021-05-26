@@ -17,11 +17,11 @@
 	},
   "resources": {
 		"*-alpha": [
-			"$(MODDABLE)/examples/assets/fonts//OpenSans-Regular-20"
+			"$(MODDABLE)/examples/assets/fonts//OpenSans-Regular-20",
+			"./assets/eyes",
+			"./assets/mouth"
 		],
-		"*": [
-			"./assets/*"
-		]
+		"*": ["./assets/*"]
   },
 	"preload": [
 		"mai5-server"
