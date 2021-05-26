@@ -6,8 +6,6 @@ services:
       dockerfile: ./Dockerfile
     privileged: true
     network_mode: host
-    ports:
-      - "8080"
     volumes:
       - /dev:/dev
       - ../:/workspace:cached
