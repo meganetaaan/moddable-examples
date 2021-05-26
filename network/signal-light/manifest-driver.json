@@ -1,0 +1,24 @@
+{
+  "config": {
+		"screen": "neomatrix-render",
+    "touch": ""
+  },
+  "defines": {
+    "neomatrix": {
+      "pin": 27,
+      "width": 5,
+      "height": 5,
+      "brightness": 32
+    }
+  },
+  "modules": {
+    "*": [
+      "$(MODULES)/drivers/neopixel/*",
+      "./neomatrix",
+      "./neomatrix-render"
+    ],
+    "commodetto/Bitmap": "$(COMMODETTO)/commodettoBitmap"
+  },
+  "preload": ["commodetto/*", "neopixel", "neomatrix", "neomatrix-render"]
+}
+

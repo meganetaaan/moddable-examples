@@ -1,0 +1,28 @@
+{
+  "build": {},
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+		"$(MODDABLE)/examples/manifest_net.json",
+		"$(MODDABLE)/modules/network/mdns/manifest.json",
+		"$(MODDABLE)/examples/manifest_piu.json",
+    "./manifest-driver.json"
+  ],
+  "config": {
+		"screen": "neomatrix-render",
+    "touch": ""
+  },
+	"preload": [
+		"http"
+	],
+  "modules": {
+    "*": [
+      "./main",
+			"$(MODULES)/network/http/*",
+      "./light-server",
+      "./marquee-label"
+    ]
+  },
+  "resources": {
+    "*-alpha": "./assets/fonts/*"
+	}
+}
