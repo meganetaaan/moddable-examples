@@ -24,5 +24,8 @@
   },
   "resources": {
     "*-alpha": "./assets/fonts/*"
-	}
+	},
+  "creation": {
+    "stack": 512
+  }
 }
