@@ -62,10 +62,6 @@ class Roboto {
 
   // 首振り
   turnHead(theta) {
-    // 0度で0〜180度で1024に対応
-    // const v = Math.floor(theta * 1024 / 180)
-    // trace(`v: ${v}\n`)
-    // this.servo.write(v)
     this.servo.write(theta)
   }
 
