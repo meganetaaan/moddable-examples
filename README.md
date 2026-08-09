@@ -77,3 +77,7 @@ BLE(Bluetooth Low Energy) を使ったサンプルです。
 ### ble/line-things
 
 - [line/line-things-starter](https://github.com/line/line-things-starter)のModdableSDK向け移植です。
+
+### spectrum-analyzer
+
+Web Streams APIで音声入力をFFT Workerへ渡し、Piuの`Port`でリアルタイム表示するスペクトラムアナライザーです。LINシミュレーター用の1 kHzテスト信号も利用できます。
