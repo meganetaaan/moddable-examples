@@ -1,122 +1,104 @@
 /*
- * Copyright (c) 2019 Shinya Ishikawa
+ * Copyright (c) 2019-2026 Shinya Ishikawa
  *
+ * Initialization and data-ready handling follow the M5Stack M5Unit-COLOR
+ * driver (MIT): https://github.com/m5stack/M5Unit-COLOR
  */
-import I2C from 'pins/i2c'
-const ADDRESS = 0x29
-const INTEGRATION_TIME = {
-  TIME_2_4MS: 0xff,
-  TIME_24MS: 0xf6,
-  TIME_50MS: 0xeb,
-  TIME_101MS: 0xd5,
-  TIME_154MS: 0xc0,
-  TIME_700MS: 0x00
-}
-const GAIN = {
-  GAIN_1X: 0x00,
-  GAIN_4X: 0x01,
-  GAIN_16X: 0x02,
-  GAIN_60X: 0x03
-}
-const WHOAMI = 0x12
-const COMMAND_BIT = 0x80
-const ATIME = 0x01
-const CONTROL = 0x0f
-const CDATAL = 0x14
-const RDATAL = 0x16
-const GDATAL = 0x18
-const BDATAL = 0x1a
-const ENABLE = 0x00
-const ENABLE_PON = 0x01
-const ENABLE_AEN = 0x02
+
+import Timer from 'timer'
+
+const Register = Object.freeze({
+  ENABLE: 0x00,
+  ATIME: 0x01,
+  CONTROL: 0x0f,
+  ID: 0x12,
+  STATUS: 0x13,
+  CDATAL: 0x14
+})
+
+const COMMAND = 0x80
+const AUTO_INCREMENT = 0x20
+const POWER_ON = 0x01
+const RGBC_ENABLE = 0x02
+const DATA_VALID = 0x01
 
 export default class TCS34725 {
-  #i2c
-  #integrationTime = INTEGRATION_TIME.TIME_154MS
-  #gain = GAIN.GAIN_4X
-  constructor (
-    dictionary = {
-      address: ADDRESS,
-      integrationTime: INTEGRATION_TIME.TIME_154MS,
-      gain: GAIN.GAIN_4X
+  #io
+  #command = new Uint8Array(1)
+  #byte = new Uint8Array(1)
+  #values = new Uint8Array(8)
+
+  constructor (options = {}) {
+    const { sensor } = options
+    if (typeof sensor?.io !== 'function') throw new TypeError('sensor.io required')
+
+    if ('target' in options) this.target = options.target
+    const io = this.#io = new sensor.io({
+      address: 0x29,
+      hz: 400_000,
+      ...sensor
+    })
+
+    try {
+      if (this.#readRegister(Register.ID) !== 0x44) {
+        throw new Error('unexpected TCS34725 sensor')
+      }
+
+      this.#writeRegister(Register.ATIME, 0xeb) // 50 ms
+      this.#writeRegister(Register.CONTROL, 0x01) // 4x gain
+      this.#writeRegister(Register.ENABLE, POWER_ON)
+      Timer.delay(3)
+      this.#writeRegister(Register.ENABLE, POWER_ON | RGBC_ENABLE)
+    } catch (error) {
+      io.close()
+      this.#io = undefined
+      throw error
     }
-  ) {
-    this.#i2c = new I2C(dictionary)
-    this.#integrationTime = dictionary.integrationTime
-    this.#gain = dictionary.gain
-    this.init()
   }
 
-  #read8 (reg) {
-    this.#i2c.write(COMMAND_BIT | reg)
-    return this.#i2c.read(1)[0]
-  }
+  sample () {
+    if (!(this.#readRegister(Register.STATUS) & DATA_VALID)) return
 
-  #read16 (reg) {
-    this.#i2c.write(COMMAND_BIT | reg)
-    const buf = this.#i2c.read(2)
-    const t = buf[0]
-    const x = buf[1]
-    return (x << 8) | t
-  }
+    this.#command[0] = COMMAND | AUTO_INCREMENT | Register.CDATAL
+    this.#io.write(this.#command)
+    this.#io.read(this.#values)
 
-  #write8 (reg, value) {
-    this.#i2c.write(COMMAND_BIT | reg, value & 0xff)
-  }
-
-  init () {
-    // make sure connected
-    const whoami = this.#read8(WHOAMI)
-    if (whoami !== 0x44 && whoami !== 0x10) {
-      throw new Error('Sensor not connected')
-    }
-
-    this.setIntegrationTime(this.#integrationTime)
-    this.setGain(this.#gain)
-  }
-
-  enable () {
-    this.#write8(ENABLE, ENABLE_PON)
-    this.#write8(ENABLE, ENABLE_PON | ENABLE_AEN)
-  }
-
-  disable () {
-    const reg = this.#read8(ENABLE)
-    this.#write8(ENABLE, reg & ~(ENABLE_PON | ENABLE_AEN))
-  }
-
-  setIntegrationTime (integrationTime) {
-    this.#write8(ATIME, integrationTime)
-    this.#integrationTime = integrationTime
-  }
-
-  setGain (gain) {
-    this.#write8(CONTROL, gain)
-    this.#gain = gain
-  }
-
-  getRawData () {
-    const c = this.#read16(CDATAL)
-    const r = this.#read16(RDATAL)
-    const g = this.#read16(GDATAL)
-    const b = this.#read16(BDATAL)
-    return { c, r, g, b }
-  }
-
-  getRGB () {
-    const rawData = this.getRawData()
-    if (rawData.c === 0) {
-      return {
-        r: 0,
-        g: 0,
-        b: 0
+    const values = this.#values
+    return {
+      color: {
+        clear: values[0] | (values[1] << 8),
+        red: values[2] | (values[3] << 8),
+        green: values[4] | (values[5] << 8),
+        blue: values[6] | (values[7] << 8)
       }
     }
+  }
 
-    return {
-      r: (rawData.r / rawData.c) * 256.0 * 0.9,
-      g: (rawData.g / rawData.c) * 256.0,
-      b: (rawData.b / rawData.c) * 256.0 * 1.1
+  close () {
+    const io = this.#io
+    if (!io) return
+
+    try {
+      const enable = this.#readRegister(Register.ENABLE)
+      this.#writeRegister(Register.ENABLE, enable & ~(POWER_ON | RGBC_ENABLE))
+    } finally {
+      io.close()
+      this.#io = undefined
     }
+  }
+
+  #readRegister (register) {
+    this.#command[0] = COMMAND | register
+    this.#io.write(this.#command)
+    this.#io.read(this.#byte)
+    return this.#byte[0]
+  }
+
+  #writeRegister (register, value) {
+    this.#io.write(Uint8Array.of(COMMAND | register, value))
+  }
+
+  static {
+    this.prototype[Symbol.dispose] = this.prototype.close
   }
 }

@@ -12,11 +12,16 @@ const KEY_A = 440
 const a = -1 / 450
 const b = 10 / 9
 
-let socket = new Client({
+const socket = new Client({
   host: config.host,
   port: 8080
 })
-let sensor = new ToF()
+const sensor = new ToF({
+  sensor: {
+    ...device.I2C.default,
+    io: device.io.SMBus
+  }
+})
 let timer = null
 
 function clamp (value, min, max) {
@@ -29,8 +34,10 @@ function getTone (mm) {
 }
 
 function loop () {
-  const mm = sensor.value
-  const message = String(getTone(mm))
+  const distance = sensor.sample().proximity.distance
+  if (distance === null) return
+
+  const message = String(getTone(distance * 10))
   socket.write(message)
 }
 
