@@ -1,13 +1,11 @@
 {
   "include": [
     "$(MODDABLE)/examples/manifest_base.json",
-    "$(MODDABLE)/examples/manifest_piu.json"
+    "$(MODDABLE)/examples/manifest_piu.json",
+    "$(MODULES)/pins/i2s/manifest.json"
   ],
   "modules": {
-    "pins/*": "$(MODULES)/pins/i2s/*",
-		"piu/Sound": [
-			"$(MODULES)/piu/MC/piuSound"
-		],
+    "piu/Sound": "$(MODULES)/piu/MC/piuSound",
     "*": "./main"
   },
   "resources": {
@@ -15,5 +13,12 @@
       "./assets/images/*",
       "./assets/sounds/*"
     ]
+  },
+  "platforms": {
+    "esp32/m5stack": {},
+    "esp32/m5stack_fire": {},
+    "...": {
+      "error": "Bongo requires an M5Stack with three buttons and a speaker"
+    }
   }
 }

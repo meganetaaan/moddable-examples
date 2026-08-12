@@ -13,5 +13,12 @@
     "*-mask": [
       "./assets/moddable-logo"
     ]
+  },
+  "platforms": {
+    "esp32/m5stack": {},
+    "esp32/m5stack_fire": {},
+    "...": {
+      "error": "JS Logo requires an M5Stack button and display"
+    }
   }
 }

@@ -9,16 +9,15 @@
 	},
 	"resources":{
 		"*-mask": [
-			"./fonts/*",
+			"./fonts/Houstiny",
 			"./images/dog"
-		],
-		"*": [
-			"./images/jobs"
 		]
 	},
 	"config": {
 		"screen": "destm32s",
-		"touch": ""
+		"touch": "",
+		"format": "Gray256",
+		"rotation": 270
 	},
 	"defines": {
 		"spi": {
@@ -33,19 +32,13 @@
 			"dc_pin": 27,
 			"rst_pin": 26,
 			"busy_pin": 25,
-			"spi_port": "HSPI_HOST"
+			"spi_port": "SPI3_HOST"
 		}
 	},
 	"platforms": {
-		"esp/crystalfontz_monochrome_epaper": {
-			"config": {
-				"rotation": 270
-			}
-		},
-		"esp/moddable_three": {
-			"config": {
-				"rotation": 270
-			}
+		"esp32": {},
+		"...": {
+			"error": "This 400x300 e-paper wiring is supported on ESP32"
 		}
 	}
 }

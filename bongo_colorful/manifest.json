@@ -2,17 +2,13 @@
   "include": [
     "$(MODDABLE)/examples/manifest_base.json",
     "$(MODDABLE)/examples/manifest_piu.json",
-    "./cryptdigest/manifest.json"
+    "$(MODULES)/pins/i2s/manifest.json",
+    "$(MODULES)/drivers/neopixel/manifest.json",
+    "$(MODULES)/io/wifi/manifest.json"
   ],
   "modules": {
-    "pins/*": "$(MODULES)/pins/i2s/*",
-		"piu/Sound": [
-			"$(MODULES)/piu/MC/piuSound"
-		],
-    "*": [
-      "./main",
-			"$(MODULES)/drivers/neopixel/*"
-    ]
+    "piu/Sound": "$(MODULES)/piu/MC/piuSound",
+    "*": "./main"
   },
   "resources": {
     "*": [
@@ -20,15 +16,18 @@
       "./assets/sounds/*"
     ]
   },
-	"preload": "neopixel",
-	"platforms": {
-		"esp32": {
-			"modules": {
-				"*": "$(MODULES)/drivers/neopixel/esp32/*"
-			}
-		},
-		"...": {
-			"error": "unsupported platform"
-		}
-	}
+  "defines": {
+    "neopixel": {
+      "length": 60,
+      "pin": 21,
+      "order": "#GRB"
+    }
+  },
+  "platforms": {
+    "esp32/m5stack": {},
+    "esp32/m5stack_fire": {},
+    "...": {
+      "error": "Colorful Bongo requires an M5Stack and a 60-pixel strip on pin 21"
+    }
+  }
 }
