@@ -10,10 +10,10 @@ class QRServer extends BLEServer {
     this.deviceName = DEVICE_NAME
     this.onDisconnected()
   }
-  onConnected (connection) {
+  onConnected (_connection) {
     this.stopAdvertising()
   }
-  onDisconnected (connection) {
+  onDisconnected (_connection) {
     this.startAdvertising({
       advertisingData: {
         flags: 6,

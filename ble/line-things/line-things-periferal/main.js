@@ -16,4 +16,4 @@ buttonA.onChanged = function () {
   }
 }
 
-// when characteristics written change application's state
+export default application

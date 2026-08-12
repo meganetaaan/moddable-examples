@@ -2,7 +2,15 @@
 
 M5StackとModdableを使ったサンプルコード集です。
 
-## 必要環境（Prerequisities）
+## 対応環境
+
+- [Moddable SDK 9.0.0](https://github.com/Moddable-OpenSource/moddable/releases/tag/9.0.0)
+- ESP32をビルドする場合は、Moddable 9.0.0が指定するESP-IDF 6.0.2
+- ソースコード検査にはNode.js 20.19.0以上の20.x、22.13.0以上の22.x、または24以降（21.x、22.0〜22.12、23.xは非対応）
+
+Moddable SDKは`9.0.0`タグをcheckoutしてください。新しいSDKへの追従は、互換性を確認したうえで別途行います。
+
+## 必要な環境と機材
 
 ### M5Stack
 
@@ -14,16 +22,27 @@ M5StackとModdableを使ったサンプルコード集です。
 
 * JavaScriptでマイコン向けのプログラムを開発できるSDKです。
 * https://www.moddable.com/
-* [公式の手順を参考](https://github.com/Moddable-OpenSource/moddable/blob/public/documentation/Moddable%20SDK%20-%20Getting%20Started.md)にセットアップしてください。
+* [v9.0.0の公式手順](https://github.com/Moddable-OpenSource/moddable/blob/9.0.0/documentation/Moddable%20SDK%20-%20Getting%20Started.md)に従ってセットアップしてください。
 
 ## ビルド方法
 
-1. デバイスをPCにUSB接続します
-2. 下記のコマンドを実行します。
+書き込みを行わずにビルドだけを確認する場合は、各サンプルのディレクトリで次を実行します。
 
 ```sh
-$ cd (各サンプルのディレクトリ)
-$ mcconfig -d -m -p esp32/m5stack
+mcconfig -dn -m -p esp32/m5stack -t build
+```
+
+デバイスへ書き込む場合はUSB接続後、`-t build`を外します。
+
+```sh
+mcconfig -d -m -p esp32/m5stack
+```
+
+ソースコード検査はリポジトリのルートで実行します。
+
+```sh
+npm ci
+npm run lint
 ```
 
 ## 各サンプルの紹介

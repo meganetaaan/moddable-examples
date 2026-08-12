@@ -9,7 +9,7 @@ class Mai5Server extends BLEServer {
     this.deviceName = DEVICE_NAME
     this.start()
   }
-  onConnected (connection) {
+  onConnected (_connection) {
     this.stopAdvertising()
     if (typeof this.onConnect === 'function') {
       this.onConnect()
@@ -24,7 +24,7 @@ class Mai5Server extends BLEServer {
       }
     })
   }
-  onDisconnected (connection) {
+  onDisconnected (_connection) {
     if (typeof this.onDisconnect === 'function') {
       this.onDisconnect()
     }

@@ -1,4 +1,3 @@
-/* global trace */
 import { Application, Style, Skin, Label } from 'piu/MC'
 import I2C from 'pins/i2c'
 

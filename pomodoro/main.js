@@ -1,4 +1,3 @@
-/* global trace */
 import { Application, Style, Skin, Label } from 'piu/MC'
 import Pomodoro, { MODE } from 'pomodoro'
 
@@ -61,18 +60,15 @@ const updateTitle = (mode) => {
   titleLabel.state = mode === MODE.WORK ? 0 : 1
 }
 
-const onTick = (time, mode) => {
-  if (time === 30000) {
-    parrotImage
-  }
+const onTick = (time, _mode) => {
   updateTime(time)
 } 
 
-const onStart = (time, mode) => {
+const onStart = () => {
   parrotImage.start()
 }
 
-const onPause = (time, mode) => {
+const onPause = () => {
   parrotImage.stop()
 }
 
@@ -81,7 +77,7 @@ const onReset = (time, mode) => {
   updateTitle(mode)
 }
 
-const onFinish = (time, mode) => {
+const onFinish = () => {
 
 }
 
@@ -119,3 +115,5 @@ if (global.button != null) {
     }
   }
 }
+
+export default application
