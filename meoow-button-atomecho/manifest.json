@@ -2,16 +2,19 @@
   "include": [
     "$(MODDABLE)/examples/manifest_base.json",
     "$(MODDABLE)/examples/manifest_net.json",
+    "$(MODDABLE)/examples/io/tcp/httpsclient/manifest_httpsclient.json",
     "$(MODULES)/io/manifest.json",
     "$(MODULES)/io/audioout/manifest.json",
-    "$(MODULES)/drivers/neopixel/manifest.json"
+    "$(MODULES)/drivers/neopixel/manifest.json",
+    "$(MODULES)/data/text/decoder/manifest.json"
   ],
   "config": {
-    "startupSound": false
+    "startupSound": false,
+    "iftttEvent": "moddable_button_pressed",
+    "iftttKey": "YOUR_WEBHOOK_KEY_HERE"
   },
   "modules": {
     "*": [
-      "$(MODULES)/network/http/*",
       "./main",
       {
         "source": "$(MODULES)/data/views/maud/maudHeader",
@@ -20,17 +23,21 @@
         "get": true,
         "set": false
       }
-    ]
+    ],
+    "http-client": "../shared/http-client",
+    "ifttt": "../shared/ifttt"
   },
   "preload": [
     "neopixel",
-    "http",
     "maudHeader"
   ],
   "resources": {
     "*": [
       "./assets/sounds/*"
     ]
+  },
+  "data": {
+    "*": "$(MODULES)/crypt/data/ca222"
   },
   "platforms": {
     "esp32/m5atom_echo": {},

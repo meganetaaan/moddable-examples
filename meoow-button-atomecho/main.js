@@ -1,16 +1,16 @@
 import AudioOut from 'embedded:io/audio/out'
 import { MAUD, SampleFormat } from 'maudHeader'
+import config from 'mc/config'
 import Resource from 'Resource'
 import NeoPixel from 'neopixel'
-import { Request } from 'http'
 import Timer from 'timer'
+import requestText from 'http-client'
+import { hasIFTTTKey, makeIFTTTPath } from 'ifttt'
 
 const np = new NeoPixel({})
 const black = np.makeRGB(0, 0, 0)
 const pink = np.makeRGB(255, 127, 127)
 const HOST = 'maker.ifttt.com'
-const API_KEY = 'YOUR_API_KEY_HERE'
-const EVENT = 'moddable_button_pressed'
 const speaker = new AudioOut.Async({})
 
 function loadSound (name) {
@@ -35,6 +35,7 @@ function loadSound (name) {
 
 const samples = loadSound('meoow.maud')
 let playing = false
+let sending = false
 speaker.start()
 
 const on = () => {
@@ -59,16 +60,28 @@ function playSound () {
   })
 }
 
-const triggerIFTTT = (value) => {
-  const request = new Request({
-    host: HOST,
-    path: `/trigger/${EVENT}/with/key/${API_KEY}?value1=${value}`,
-    response: String
-  })
-  request.callback = function (message, value) {
-    if (Request.responseComplete === message) {
-      trace(`${value}\n`)
-    }
+async function triggerIFTTT (value) {
+  if (sending) return
+  if (!hasIFTTTKey(config.iftttKey)) {
+    trace('Set config.iftttKey before sending a webhook\n')
+    return
+  }
+
+  sending = true
+  try {
+    const response = await requestText(device.network.https, {
+      host: HOST,
+      path: makeIFTTTPath({
+        event: config.iftttEvent,
+        key: config.iftttKey,
+        value
+      })
+    })
+    trace(`${response}\n`)
+  } catch (error) {
+    trace(`IFTTT request failed: ${error}\n`)
+  } finally {
+    sending = false
   }
 }
 
@@ -77,7 +90,7 @@ globalThis.button.a.onChanged = function () {
   if (this.read()) return
 
   trace('play sound\n')
-  triggerIFTTT('')
+  triggerIFTTT('atom-echo')
   playSound()
 }
 

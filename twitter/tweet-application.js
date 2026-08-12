@@ -289,7 +289,7 @@ const Tweet = Container.template(({ tweet }) => {
       }),
       */
       new ReplyCount({
-        count: 0,
+        count: tweet.reply_count ?? 0,
         bottom: 4,
         left: 44
       }),

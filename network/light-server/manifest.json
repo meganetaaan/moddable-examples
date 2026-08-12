@@ -1,27 +1,28 @@
 {
-	"include": [
-		"$(MODDABLE)/examples/manifest_base.json",
-		"$(MODDABLE)/examples/manifest_net.json",
-		"$(MODDABLE)/modules/network/mdns/manifest.json"
-	],
-	"modules": {
-		"*": [
-			"./main",
-			"$(MODULES)/drivers/neopixel/*",
-			"$(MODULES)/network/http/*"
-		]
-	},
-	"preload": [
-		"http"
-	],
-	"platforms": {
-		"esp32": {
-			"modules": {
-				"*": "$(MODULES)/drivers/neopixel/esp32/*"
-			}
-		},
-		"...": {
-			"error": "unsupported platform"
-		}
-	}
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/examples/manifest_net.json",
+    "$(MODDABLE)/examples/io/listener/httpserver/manifest_httpserver.json",
+    "$(MODULES)/io/dnssd/manifest.json",
+    "$(MODULES)/drivers/neopixel/manifest.json"
+  ],
+  "modules": {
+    "*": "./main"
+  },
+  "defines": {
+    "neopixel": {
+      "length": 60,
+      "pin": 21,
+      "order": "#RGB"
+    }
+  },
+  "config": {
+    "lightHostName": "m5stack-light"
+  },
+  "platforms": {
+    "esp32": {},
+    "...": {
+      "error": "Light Server requires ESP32 and a NeoPixel strip on pin 21"
+    }
+  }
 }
