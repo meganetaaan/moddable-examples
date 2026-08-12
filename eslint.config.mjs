@@ -5,10 +5,7 @@ const readonly = 'readonly'
 export default [
   {
     ignores: [
-      '**/node_modules/**',
-      // XS native bindings use legacy syntax that ESLint cannot parse. These
-      // exclusions disappear in the PRs that replace the bindings.
-      'ble/line-things/line-things-periferal/mac-address.js'
+      '**/node_modules/**'
     ]
   },
   js.configs.recommended,
@@ -39,6 +36,7 @@ export default [
         global: readonly,
         location: readonly,
         navigator: readonly,
+        native: readonly,
         screen: readonly,
         trace: readonly
       }
@@ -52,14 +50,19 @@ export default [
     }
   },
   {
-    files: ['theremin/server/**/*.js'],
+    files: [
+      'ble/web-server.js',
+      'test/**/*.js',
+      'theremin/server/**/*.js'
+    ],
     languageOptions: {
       sourceType: 'module',
       globals: {
         clearTimeout: readonly,
         fetch: readonly,
         process: readonly,
-        setTimeout: readonly
+        setTimeout: readonly,
+        URL: readonly
       }
     }
   }

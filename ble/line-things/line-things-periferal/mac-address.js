@@ -1,1 +1,3 @@
-export default function getMacAdress () @ "mod_get_mac_address";
+export default function getMacAddress () {
+  return native('mod_get_mac_address').call()
+}

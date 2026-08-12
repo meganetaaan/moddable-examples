@@ -1,67 +1,35 @@
-/*
- * Copyright (c) 2018  Moddable Tech, Inc.
- *
- *   This file is part of the Moddable SDK.
- *
- *   This work is licensed under the
- *       Creative Commons Attribution 4.0 International License.
- *   To view a copy of this license, visit
- *       <http://creativecommons.org/licenses/by/4.0>.
- *   or send a letter to Creative Commons, PO Box 1866,
- *   Mountain View, CA 94042, USA.
- *
- */
 import qrCode from 'qrcode'
 
-// render QR code to screen
-// let render = new Poco(screen);
+const MARGIN = 10
+const MAX_VERSION = 10
 
-// generate QR code
-function drawQR (str, render) {
-  let qr = qrCode({ input: str, maxVersion: 4 })
-  let size = qr.size
-  qr = new Uint8Array(qr)
+function drawQR (value, render) {
+  let qr
+  try {
+    qr = qrCode({ input: value, maxVersion: MAX_VERSION })
+  } catch (error) {
+    trace(`Unable to generate QR code: ${error}\n`)
+    return false
+  }
+
+  const available = Math.min(
+    render.width - MARGIN * 2,
+    render.height - MARGIN * 2
+  )
+  const pixels = Math.floor(available / qr.size)
+  if (pixels < 1) return false
+
+  const size = pixels * qr.size
+  const x = (render.width - size) >> 1
+  const y = (render.height - size) >> 1
+  const white = render.makeColor(255, 255, 255)
+  const black = render.makeColor(20, 20, 20)
 
   render.begin()
-  render.fillRectangle(
-    render.makeColor(255, 255, 255),
-    0,
-    0,
-    render.width,
-    render.height
-  )
+  render.fillRectangle(white, 0, 0, render.width, render.height)
+  render.drawQRCode(qr, x, y, pixels, black)
   render.end()
-
-  let margin = 10
-  let available = Math.min(
-    render.width - margin * 2,
-    render.height - margin * 2
-  )
-  let pixels = Math.floor(available / size)
-  margin += (available - pixels * size) >> 1
-
-  for (let y = 0; y < size; y++) {
-    render.begin(margin, margin + y * pixels, size * pixels, pixels)
-    render.fillRectangle(
-      render.makeColor(255, 255, 255),
-      0,
-      0,
-      render.width,
-      render.height
-    )
-    for (let x = 0; x < size; x++) {
-      if (qr[y * size + x]) {
-        render.fillRectangle(
-          render.makeColor(20, 20, 20),
-          margin + x * pixels,
-          margin + y * pixels,
-          pixels,
-          pixels
-        )
-      }
-    }
-    render.end()
-  }
+  return true
 }
 
 export default drawQR

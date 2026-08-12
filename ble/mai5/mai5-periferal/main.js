@@ -1,4 +1,3 @@
-/* global trace */
 import Mai5Server from 'mai5-server'
 import {
   Application,
@@ -9,32 +8,25 @@ import {
   Content,
   Texture
 } from 'piu/MC'
-import AudioOut from 'pins/audioout'
-import Resource from 'Resource'
+import Sound from 'piu/Sound'
 import Timer from 'timer'
 import config from 'mc/config'
 
-const speaker = new AudioOut({ streams: 1 })
-speaker.callback = function() {
-  this.stop()
-}
 const voices = {
-  CONNECTED_01: new Resource('CONNECTED_01.maud'),
-  DISCONNECTED_00: new Resource('DISCONNECTED_00.maud'),
-  DISCONNECTED_01: new Resource('DISCONNECTED_01.maud'),
-  DISCONNECTED_02: new Resource('DISCONNECTED_02.maud')
+  connected: new Sound({ path: 'CONNECTED_01.wav' }),
+  disconnected: new Sound({ path: 'DISCONNECTED_00.wav' }),
+  callOne: new Sound({ path: 'DISCONNECTED_01.wav' }),
+  callTwo: new Sound({ path: 'DISCONNECTED_02.wav' })
 }
 const parent = config.isFather
-  ? new Resource('FATHER.maud')
-  : new Resource('MOTHER.maud')
+  ? new Sound({ path: 'FATHER.wav' })
+  : new Sound({ path: 'MOTHER.wav' })
 
 const FONT = 'OpenSans-Regular-20'
 const BLACK = '#202020'
-const WHITE = '#FAFAFA'
+const WHITE = '#fafafa'
 
-// const faceTexture = new Texture('face.png')
-// const sadFaceTexture = new Texture('face2.png')
-const eyesTexture = new Texture('eyes.png')
+const eyesTexture = new Texture({ path: 'eyes.png' })
 const eyesSkin = new Skin({
   texture: eyesTexture,
   color: BLACK,
@@ -43,7 +35,7 @@ const eyesSkin = new Skin({
   width: 192,
   height: 64
 })
-const mouthTexture = new Texture('mouth.png')
+const mouthTexture = new Texture({ path: 'mouth.png' })
 const mouthSkin = new Skin({
   texture: mouthTexture,
   color: BLACK,
@@ -104,33 +96,42 @@ const application = new Application(null, {
 })
 
 let timer
-let count
-const server = new Mai5Server()
-server.onConnect = () => {
-  trace('connected\n')
-  if (timer != null) {
-    Timer.clear(timer)
+let count = 0
+
+function playPhrase (message) {
+  parent.play(0, 1, () => message.play())
+}
+
+new Mai5Server({
+  kidID: config.kidID,
+  onConnect () {
+    trace('connected\n')
+    if (timer !== undefined) {
+      Timer.clear(timer)
+      timer = undefined
+    }
+
+    application.content('face').content('mouth').variant = 1
+    application.content('label').string = 'connected'
+    playPhrase(voices.connected)
+  },
+  onDisconnect () {
+    trace('disconnected\n')
+    if (timer !== undefined) {
+      Timer.clear(timer)
+      timer = undefined
+    }
+
+    application.content('face').content('mouth').variant = 0
+    application.content('label').string = 'disconnected'
+    voices.disconnected.play()
+    count = 0
+    timer = Timer.repeat(() => {
+      const message = count % 2 === 0 ? voices.callOne : voices.callTwo
+      playPhrase(message)
+      count++
+    }, 10_000)
   }
-  application.content('face').content('mouth').variant = 1 // happy face
-  application.content('label').string = 'connected'
-  speaker.enqueue(0, AudioOut.Samples, parent)
-  speaker.enqueue(0, AudioOut.Samples, voices.CONNECTED_01)
-  speaker.enqueue(0, AudioOut.Callback, 0)
-  speaker.start()
-}
-server.onDisconnect = () => {
-  trace('disconnected\n')
-  application.content('face').content('mouth').variant = 0 // sad face
-  application.content('label').string = 'disconnected'
-  speaker.enqueue(0, AudioOut.Samples, voices.DISCONNECTED_00)
-  speaker.start()
-  count = 0
-  timer = Timer.repeat(() => {
-    const message = count % 2 === 0 ? voices.DISCONNECTED_01 : voices.DISCONNECTED_02
-    speaker.enqueue(0, AudioOut.Samples, parent)
-    speaker.enqueue(0, AudioOut.Samples, message)
-    speaker.enqueue(0, AudioOut.Callback, 0)
-    speaker.start()
-    count++
-  }, 10_000)
-}
+})
+
+export default application

@@ -1,34 +1,40 @@
 {
-	"include": [
-		"$(MODDABLE)/examples/manifest_base.json",
-		"$(MODDABLE)/examples/manifest_piu.json",
-		"$(MODDABLE)/modules/network/ble/manifest_server.json"
-	],
-	"config": {
-		"isFather": true
-	},
-	"modules": {
-		"piu/Sound": [
-			"$(MODULES)/piu/MC/piuSound"
-		],
-		"*": [
-			"./*"
-		]
-	},
-  "resources": {
-		"*-alpha": [
-			"$(MODDABLE)/examples/assets/fonts//OpenSans-Regular-20",
-			"./assets/eyes",
-			"./assets/mouth"
-		],
-		"*": ["./assets/*"]
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/examples/manifest_piu.json",
+    "$(MODDABLE)/modules/io/ble/server/manifest.json"
+  ],
+  "config": {
+    "isFather": true,
+    "kidID": "Mai5"
   },
-	"preload": [
-		"mai5-server"
-	],
-	"ble": {
-		"*": [
-			"./bleservices/*"
-		]
-	}
+  "modules": {
+    "piu/Sound": "$(MODULES)/piu/MC/piuSound",
+    "*": [
+      "./mai5-server",
+      "./main"
+    ]
+  },
+  "resources": {
+    "*-alpha": [
+      "$(MODDABLE)/examples/assets/fonts/OpenSans-Regular-20",
+      "./assets/eyes",
+      "./assets/mouth"
+    ],
+    "*": [
+      "./assets/CONNECTED_01",
+      "./assets/DISCONNECTED_00",
+      "./assets/DISCONNECTED_01",
+      "./assets/DISCONNECTED_02",
+      "./assets/FATHER",
+      "./assets/MOTHER"
+    ]
+  },
+  "platforms": {
+    "esp32/m5stack": {},
+    "esp32/m5stack_fire": {},
+    "...": {
+      "error": "Mai5 requires an M5Stack display, speaker, and ESP32 BLE"
+    }
+  }
 }

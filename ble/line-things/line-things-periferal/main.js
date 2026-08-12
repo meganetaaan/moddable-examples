@@ -11,9 +11,7 @@ const application = new LineThingsApplication({
 // press buttonA to send notification to central
 buttonA.onChanged = function () {
   const value = this.read() === 1 ? 0 : 1
-  if (server.notifyCharacteristic != null) {
-    server.notifyValue(server.notifyCharacteristic, value)
-  }
+  server.notify(value)
 }
 
 export default application

@@ -1,32 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>QR-BLE</title>
     <link rel="stylesheet" href="css/main.css">
     <script type="module" src="js/index.js"></script>
-</head>
-
-<body>
+  </head>
+  <body>
     <header>
-        <h1 class="title">QR-BLE Example</h1>
-        <div class="ble-control">
-            <div class="ble-status disconnected"></div>
-            <button class="ble-connect-button" alt="connect to device"></button>
+      <h1 class="title">QR-BLE Example</h1>
+      <div class="ble-control">
+        <div class="ble-status disconnected" role="status">
+          Device disconnected
         </div>
+        <button
+          class="ble-connect-button"
+          type="button"
+          aria-label="Connect to QR display"
+        ></button>
+      </div>
     </header>
     <main>
-        <form class="qr-form" action="">
-            <h2 class="qr-label">QR Value</h2>
-            <input class="qr-text" type="text" name="qr-value" id="url">
-            <button class="qr-send-button">send</button>
-        </form>
+      <form class="qr-form">
+        <label class="qr-label" for="qrValue">QR value (200 UTF-8 bytes max)</label>
+        <input
+          class="qr-text"
+          type="text"
+          name="qr-value"
+          id="qrValue"
+          maxlength="200"
+          required
+        >
+        <button class="qr-send-button" type="submit" disabled>Send</button>
+        <output class="qr-message" aria-live="polite"></output>
+      </form>
     </main>
-    <footer>
-    </footer>
-</body>
-
+  </body>
 </html>

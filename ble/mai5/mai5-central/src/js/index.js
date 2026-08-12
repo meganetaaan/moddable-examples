@@ -1,26 +1,36 @@
 import BLEClient from './BLEClient.js'
 
-/* global document */
-
 document.addEventListener('DOMContentLoaded', () => {
   const bleClient = new BLEClient()
-  bleClient.onConnected = () => {
+  const connectButton = document.querySelector('.ble-connect-button')
+  const guide = document.querySelector('.guide')
+
+  function setStatus (status) {
     const contents = document.querySelectorAll('.ble-status,.guide')
-    for (let c of contents) {
-      c.classList.remove('disconnected', 'initial')
-      c.classList.add('connected')
+    for (const content of contents) {
+      content.classList.remove('connected', 'disconnected', 'initial')
+      content.classList.add(status)
     }
-  }
-  bleClient.onDisconnected = () => {
-    const contents = document.querySelectorAll('.ble-status,.guide')
-    for (let c of contents) {
-      c.classList.remove('connected', 'initial')
-      c.classList.add('disconnected')
-    }
+    guide.textContent = status === 'connected' ? 'Connected' : 'Disconnected'
   }
 
-  const connectButton = document.querySelector('.ble-connect-button')
-  connectButton.addEventListener('click', async function () {
-    await bleClient.connect()
+  bleClient.onConnected = () => {
+    setStatus('connected')
+    connectButton.disabled = true
+  }
+  bleClient.onDisconnected = () => {
+    setStatus('disconnected')
+    connectButton.disabled = false
+  }
+
+  connectButton.addEventListener('click', async () => {
+    connectButton.disabled = true
+    try {
+      await bleClient.connect()
+    } catch (error) {
+      console.error(error)
+      setStatus('disconnected')
+      connectButton.disabled = false
+    }
   })
 })
