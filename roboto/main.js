@@ -2,7 +2,9 @@ import Timer from 'timer'
 import { NeoMatrix } from 'neomatrix'
 import PWMServo from 'pwm-servo'
 
-let lights = globalThis.lights
+if (!globalThis.lights) throw new Error('Roboto requires matrix lights')
+
+const lights = globalThis.lights
 const BLACK = lights.makeRGB(0, 0, 0)
 const WHITE = lights.makeRGB(255, 255, 255)
 const RED = lights.makeRGB(255, 0, 0)
@@ -10,18 +12,21 @@ const BLUE = lights.makeRGB(0, 0, 255)
 const INTERVAL = 3000
 const ANGLE_MAX = 30
 const ANGLE_MIN = 0
+const MATRIX_BRIGHTNESS = 32
 
-function randomBetween(min, max) {
+function randomBetween (min, max) {
   return Math.floor(min + Math.random() * (max - min))
 }
 
 class Roboto {
-  constructor() {
+  constructor () {
     this.matrix = new NeoMatrix({
-      lights: globalThis.lights,
+      lights,
       width: 5,
-      height: 5
+      height: 5,
+      layout: 'columns-reversed'
     })
+    this.matrix.brightness = MATRIX_BRIGHTNESS
     this.servo = new PWMServo({
       io: device.io.PWM,
       pin: 25,
@@ -30,13 +35,13 @@ class Roboto {
     })
     this.active = true
     trace('init\n')
-    this.handler = Timer.repeat(() => {
+    Timer.repeat(() => {
       this.update()
     }, INTERVAL)
   }
 
   // LEDマトリクス描画
-  renderMatrix(theta) {
+  renderMatrix (theta) {
     const matrix = this.matrix
     // 背景の描画
     matrix.fill(BLACK)
@@ -61,11 +66,11 @@ class Roboto {
   }
 
   // 首振り
-  turnHead(theta) {
+  turnHead (theta) {
     this.servo.write(theta)
   }
 
-  update() {
+  update () {
     if (!this.active) {
       return
     }
@@ -77,9 +82,19 @@ class Roboto {
   }
 }
 
-const roboto = new Roboto
-globalThis.button.a.onChanged = function () {
-  if (this.read()) {
+const roboto = new Roboto()
+const Digital = device.io.Digital
+let lastPress = 0
+
+new Digital({
+  pin: device.pin.button,
+  mode: Digital.InputPullUp,
+  edge: Digital.Falling,
+  onReadable () {
+    const now = Date.now()
+    if ((now - lastPress) < 125) return
+
+    lastPress = now
     roboto.active = !roboto.active
   }
-}
+})

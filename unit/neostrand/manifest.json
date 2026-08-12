@@ -1,29 +1,62 @@
 {
   "include": [
     "$(MODDABLE)/examples/manifest_base.json",
-    "$(MODULES)/pins/digital/monitor/manifest.json",
-
-    "$(MODDABLE)/examples/manifest_net.json",
-    "$(MODULES)/network/mdns/manifest.json"
+    "$(MODDABLE)/modules/io/digital/manifest.json",
+    "$(MODULES)/drivers/neopixel/manifest.json"
   ],
+  "build": {
+    "IO": "$(MODDABLE)/modules/io"
+  },
+  "defines": {
+    "ECMA419": {
+      "enabled": 1
+    }
+  },
   "modules": {
-    "*": [
-      "$(MODULES)/drivers/neopixel/*",
-      "$(MODULES)/drivers/neostrand/*",
-      "$(MODULES)/network/http/*",
-      "./main"
-    ],
+    "*": "./main",
+    "neostrand": "$(MODULES)/drivers/neostrand/neostrand",
     "piu/Timeline": "$(MODULES)/piu/All/piuTimeline"
   },
-  "preload": ["neopixel", "neostrand", "piu/Timeline", "http"],
+  "preload": [
+    "neopixel",
+    "neostrand",
+    "piu/Timeline"
+  ],
+  "config": {
+    "strand": {
+      "length": 29,
+      "pin": 32,
+      "order": "RGB",
+      "brightness": 128
+    },
+    "button": {
+      "pin": 37
+    }
+  },
   "platforms": {
-    "esp32": {
-      "modules": {
-        "*": "$(MODULES)/drivers/neopixel/esp32/*"
+    "esp32/m5stack": {
+      "config": {
+        "strand": {
+          "pin": 21
+        },
+        "button": {
+          "pin": 39
+        }
       }
     },
+    "esp32/m5stack_fire": {
+      "config": {
+        "strand": {
+          "pin": 21
+        },
+        "button": {
+          "pin": 39
+        }
+      }
+    },
+    "esp32/m5stick_c": {},
     "...": {
-      "error": "unsupported platform"
+      "error": "NeoStrand requires an M5Stack or M5StickC"
     }
   }
 }

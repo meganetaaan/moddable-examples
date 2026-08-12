@@ -6,8 +6,15 @@
   "modules": {
     "*": [
       "./main",
-      "./neomatrix",
       "./pwm-servo"
-    ]
+    ],
+    "neomatrix": "../shared/neomatrix",
+    "neomatrix-utils": "../shared/neomatrix-utils"
+  },
+  "platforms": {
+    "esp32/m5atom_matrix": {},
+    "...": {
+      "error": "Roboto requires an M5Atom Matrix"
+    }
   }
 }

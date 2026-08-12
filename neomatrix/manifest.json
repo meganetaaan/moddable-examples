@@ -1,23 +1,13 @@
 {
-  "build": {},
   "include": [
     "$(MODDABLE)/examples/manifest_base.json",
     "$(MODDABLE)/examples/manifest_commodetto.json",
     "./manifest-driver.json"
   ],
-  "config": {
-		"screen": "neomatrix-render",
-    "touch": ""
-  },
   "modules": {
-    "commodetto/parseBMP": "$(COMMODETTO)/commodettoParseBMP",
-    "commodetto/Bitmap": "$(COMMODETTO)/commodettoBitmap",
-    "commodetto/Poco": "$(COMMODETTO)/commodettoPoco",
-    "commodetto/*": "$(COMMODETTO)/commodettoPocoBlit",
     "*": "./main"
   },
   "resources": {
-		"*": "./assets/*"
-	},
-  "preload": ["commodetto/*"]
+    "*": "./assets/*"
+  }
 }

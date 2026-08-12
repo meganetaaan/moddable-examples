@@ -1,40 +1,31 @@
+import config from 'mc/config'
 import NeoPixel from 'neopixel'
 import Timer from 'timer'
 
-// On M5Stack + NeoPixel Unit
-// const np = new NeoPixel({ length: 29, pin: 21, order: 'RGB' })
-
-// On M5StickC + NeoPixel Unit
-// const np = new NeoPixel({ length: 29, pin: 32, order: 'RGB' })
-
-// On M5GO or M5Stack Fire + embedded NeoPixel
-const np = new NeoPixel({ length: 10, pin: 15, order: 'RGB' })
+const { length, pin, order, brightness } = config.led
+const np = new NeoPixel({ length, pin, order })
+np.brightness = brightness
 
 Timer.delay(1)
-np.fill(np.makeRGB(255, 255, 255))
-np.update()
-Timer.delay(500)
-np.fill(np.makeRGB(255, 0, 0))
-np.update()
-Timer.delay(500)
-np.fill(np.makeRGB(0, 255, 0))
-np.update()
-Timer.delay(500)
-np.fill(np.makeRGB(0, 0, 255))
-np.update()
-Timer.delay(500)
+for (const color of [[255, 255, 255], [255, 0, 0], [0, 255, 0], [0, 0, 255]]) {
+  np.fill(np.makeRGB(...color))
+  np.update()
+  Timer.delay(500)
+}
+
+function nextColor (color) {
+  color <<= 1
+  return color === 0x1000000 ? 1 : color
+}
 
 let value = 0x01
 Timer.repeat(() => {
   let v = value
   for (let i = 0; i < np.length; i++) {
-    v <<= 1
-    if (v === 1 << 24) v = 1
     np.setPixel(i, v)
+    v = nextColor(v)
   }
 
   np.update()
-
-  value <<= 1
-  if (value === 1 << 24) value = 1
+  value = nextColor(value)
 }, 33)

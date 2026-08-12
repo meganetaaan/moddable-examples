@@ -11,93 +11,69 @@
  *   Mountain View, CA 94042, USA.
  *
  */
-import NeoPixel from "neopixel";
-import Timer from "timer";
+import config from 'mc/config'
+import NeoPixel from 'neopixel'
+import NeoMatrix from 'neomatrix'
+import Timer from 'timer'
 
-const np = new NeoPixel({length: 16 * 16, pin: 25, order: "GRB"});
-np.brightness = 64
 const COOLING = 12
+const FRAME_RATE = 30
+const { width, height, pin, order, brightness } = config.flame
+const lights = new NeoPixel({ length: width * height, pin, order })
+const matrix = new NeoMatrix({ lights, width, height })
+matrix.brightness = brightness
 
 class Flame {
-	constructor(width, height, np) {
-		this.width = width
-		this.height = height
-		this.heat = new Uint8Array(width * height)
-		this.hue = 15
-		this.np = np
-	}
+  constructor (matrix) {
+    this.matrix = matrix
+    this.heat = new Uint8Array(matrix.width * matrix.height)
+    this.hue = 15
+  }
 
-	index(x, y) {
-		return this.width * y + x;
-	}
+  index (x, y) {
+    return (this.matrix.width * y) + x
+  }
 
-	update() {
-		let cooldown, i, j, x, pre;
+  update () {
+    const { width, height } = this.matrix
 
-		// copy and cooldown
-		for (i = this.height - 1; i > 0; i--) {
-			for (j = 0; j < this.width; j++) {
-				x = this.index(j, i)
-				cooldown = Math.random() * COOLING + COOLING
-				pre = this.heat[this.index(j, i - 1)]
-				if (cooldown > pre) {
-					this.heat[x] = 0
-				} else {
-					this.heat[x] = pre - cooldown
-				}
-			}
-		}
+    for (let y = height - 1; y > 0; y -= 1) {
+      for (let x = 0; x < width; x += 1) {
+        const previous = this.heat[this.index(x, y - 1)]
+        const cooldown = Math.random() * COOLING + COOLING
+        this.heat[this.index(x, y)] = Math.max(0, previous - cooldown)
+      }
+    }
 
-		// SPARKING
-		for (j = 0; j < this.width; j++) {
-			x = this.index(j, 0)
-			pre = 50 + 300 * Math.abs((this.width / 2) - j) / this.width
-			this.heat[x] = (Math.random() * pre) + (255 - pre);
-		}
-	}
+    for (let x = 0; x < width; x += 1) {
+      const range = 50 + (300 * Math.abs((width / 2) - x) / width)
+      this.heat[this.index(x, 0)] = (Math.random() * range) + (255 - range)
+    }
+  }
 
-	color(x, y) {
-		let t, h, s, b
-		t = this.heat[this.index(x, y)] // 0-255
-		h = this.hue + (30 * t / 255)
-		s = 1000 - 200 * (t / 255) * (t / 255)
-		b = (t / 255) * 1000
-		return this.np.makeHSB(h, s, b)
-	}
+  color (x, y) {
+    const heat = this.heat[this.index(x, y)]
+    const hue = this.hue + (30 * heat / 255)
+    const saturation = 1000 - (200 * (heat / 255) ** 2)
+    const brightness = (heat / 255) * 1000
+    return this.matrix.makeHSB(hue, saturation, brightness)
+  }
 
-	draw() {
-		let i, j, a, b, color
-		let idx
-		this.update()
-		for (j = 0; j < this.width; j++) {
-			for (i = 0; i < this.height; i++) {
-				color = this.color(j, i)
-				a = j * this.height
-				b = j & 1 ? this.width - i - 1 : i
-				// b = i
-				idx = a + b
-				this.np.setPixel(idx, color)
-			}
-		}
-		this.np.update()
-	}
-
-	print() {
-		let i, j
-		for (i = this.height - 1; i >= 0; i--) {
-			for (j = 0; j < this.width; j++) {
-					trace(this.heat[this.index(j, i)])
-					trace(",")
-			}
-			trace("\n")
-		}
-	}
+  draw () {
+    this.update()
+    for (let x = 0; x < this.matrix.width; x += 1) {
+      for (let y = 0; y < this.matrix.height; y += 1) {
+        this.matrix.setPixel(x, y, this.color(x, y))
+      }
+    }
+    this.matrix.update()
+  }
 }
 
-let tick = 15
-const flame = new Flame(16, 16, np)
+let hue = 15
+const flame = new Flame(matrix)
 Timer.repeat(() => {
-	tick = (tick + 1) % 360
-	flame.hue = tick
-	flame.draw()
-}, 33);
+  hue = (hue + 1) % 360
+  flame.hue = hue
+  flame.draw()
+}, Math.round(1000 / FRAME_RATE))

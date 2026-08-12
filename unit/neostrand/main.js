@@ -12,8 +12,8 @@
  *
  */
 
-/* global button */
-
+import config from 'mc/config'
+import Digital from 'embedded:io/digital'
 import { NeoStrand, NeoStrandEffect } from 'neostrand'
 
 const TIMING_WS2812B = {
@@ -22,55 +22,50 @@ const TIMING_WS2812B = {
   reset: { level0: 0, duration0: 100, level1: 0, duration1: 100 }
 }
 
-const LEN = 29
+const { length, pin, order, brightness } = config.strand
 const strand = new NeoStrand({
-  length: LEN,
-  pin: 32, // for M5StickC
-  order: 'RGB',
+  length,
+  pin,
+  order,
   timing: TIMING_WS2812B
 })
+strand.brightness = brightness
 
-let myEffect = new NeoStrand.HueSpan({
+const midpoint = Math.floor(strand.length / 2)
+const firstEffect = new NeoStrand.HueSpan({
   strand,
   start: 0,
-  end: strand.length / 2 - 1
+  end: midpoint
 })
-let myEffect2 = new NeoStrand.Marquee({
+const secondEffect = new NeoStrand.Marquee({
   strand,
-  start: strand.length / 2,
+  start: midpoint,
   end: strand.length,
   reverse: 1
 })
 
-let myScheme = [myEffect, myEffect2]
+const initialScheme = [firstEffect, secondEffect]
 
-strand.setScheme(myScheme)
+strand.setScheme(initialScheme)
 strand.start(50)
 
-let manySchemes = [
-  myScheme,
+const schemes = [
+  initialScheme,
   [new NeoStrand.HueSpan({ strand })],
   [new NeoStrand.Marquee({ strand })]
 ]
 let currentScheme = 0
 
-button.a.onChanged = function () {
-  if (this.read() === 1) {
-    currentScheme = (currentScheme + 1) % manySchemes.length
-    strand.setScheme(manySchemes[currentScheme])
-  }
-}
-
 class RandomColor extends NeoStrandEffect {
   constructor (dictionary) {
     super(dictionary)
     this.name = 'RandomColor'
-    this.size = dictionary.size ? dictionary.size : 15
-    this.max = dictionary.max ? dictionary.max : 127
+    this.size = dictionary.size ?? 15
+    this.max = dictionary.max ?? 127
     this.loop = 1 // force loop
   }
   loopPrepare (effect) {
-    effect.colors_set = 0
+    effect.colorsSet = 0
   }
   activate (effect) {
     effect.timeline.on(
@@ -82,8 +77,8 @@ class RandomColor extends NeoStrandEffect {
     )
     effect.reset(effect)
   }
-  set effectValue (value) {
-    if (this.colors_set === 0) {
+  set effectValue (_value) {
+    if (this.colorsSet === 0) {
       for (let i = this.start; i < this.end; i++) {
         if (i % this.size === 0) {
           this.color = this.strand.makeRGB(
@@ -94,10 +89,24 @@ class RandomColor extends NeoStrandEffect {
         }
         this.strand.set(i, this.color, this.start, this.end)
       }
-      this.colors_set = 1
+      this.colorsSet = 1
     }
   }
 }
 
-let randomColorScheme = [new RandomColor({ strand })]
-manySchemes.push(randomColorScheme)
+schemes.push([new RandomColor({ strand })])
+
+let lastPress = 0
+new Digital({
+  pin: config.button.pin,
+  mode: Digital.InputPullUp,
+  edge: Digital.Falling,
+  onReadable () {
+    const now = Date.now()
+    if ((now - lastPress) < 125) return
+
+    lastPress = now
+    currentScheme = (currentScheme + 1) % schemes.length
+    strand.setScheme(schemes[currentScheme])
+  }
+})
