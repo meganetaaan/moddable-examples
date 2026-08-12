@@ -1,65 +1,63 @@
-/* global location, WebSocket, AudioContext */
-
 class Oscillator {
   constructor () {
-    this.ctx = new AudioContext()
-    this.osc = this.ctx.createOscillator()
-    this.osc.connect(this.ctx.destination)
-    this.playing = false
+    this.context = new AudioContext()
+    this.oscillator = this.context.createOscillator()
+    this.gain = this.context.createGain()
+    this.gain.gain.value = 0
+    this.oscillator.connect(this.gain).connect(this.context.destination)
+    this.started = false
   }
 
-  // 音を鳴らす
-  start () {
-    if (this.playing) {
-      return
+  async setMuted (muted) {
+    if (!muted) {
+      if (!this.started) {
+        this.oscillator.start()
+        this.started = true
+      }
+      await this.context.resume()
     }
-    this.osc.start()
-    this.playing = true
+
+    this.gain.gain.setTargetAtTime(
+      muted ? 0 : 0.2,
+      this.context.currentTime,
+      0.01
+    )
   }
 
-  // 音を止める
-  stop () {
-    if (!this.playing) {
-      return
+  setFrequency (frequency) {
+    if (!Number.isFinite(frequency) || frequency < 20 || frequency > 20_000) {
+      return false
     }
-    this.osc.stop()
-    this.playing = false
-  }
 
-  // 音程を変える
-  setFrequency (freq) {
-    // NOTE: frequencyを直接書き換えず、setValueAtTimeなどのメソッドを使う
-    this.osc.frequency.setValueAtTime(freq, this.ctx.currentTime + 1 / 15)
+    this.oscillator.frequency.setTargetAtTime(
+      frequency,
+      this.context.currentTime,
+      1 / 60
+    )
+    return true
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const oscillator = new Oscillator()
-  const heltz = document.querySelector('.frequency-value')
-
+  const frequencyElement = document.querySelector('.frequency-value')
   const muteButton = document.getElementById('muteButton')
+
   muteButton.addEventListener('click', async () => {
-    const muted = muteButton.classList.contains('muted')
-    if (muted) {
-      // NOTE: クリックを起点に音声を再生開始する
-      oscillator.start()
-      muteButton.classList.remove('muted')
-    } else {
-      oscillator.stop()
-      muteButton.classList.add('muted')
-    }
+    const muted = !muteButton.classList.contains('muted')
+    await oscillator.setMuted(muted)
+    muteButton.classList.toggle('muted', muted)
+    muteButton.setAttribute('aria-pressed', String(!muted))
   })
 
-  const socket = new WebSocket(`ws://${location.host}/`)
-  socket.onopen = () => {
-    console.log('connected')
-  }
-  socket.onmessage = (event) => {
-    const tone = Number(event.data)
-    oscillator.setFrequency(tone)
-    heltz.innerText = tone.toFixed(1)
-  }
-  socket.onclose = () => {
-    console.log('disconnected')
-  }
+  const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
+  const socket = new WebSocket(`${protocol}//${location.host}/`)
+  socket.addEventListener('open', () => console.log('connected'))
+  socket.addEventListener('message', event => {
+    const frequency = Number(event.data)
+    if (!oscillator.setFrequency(frequency)) return
+
+    frequencyElement.textContent = frequency.toFixed(1)
+  })
+  socket.addEventListener('close', () => console.log('disconnected'))
 })

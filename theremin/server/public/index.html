@@ -1,21 +1,26 @@
-<html>
+<!doctype html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Moddable Theremin</title>
     <style>
       body {
         width: 100%;
-        height: 100%;
+        height: 100vh;
         margin: 0;
         background-color: rgb(68, 160, 221);
-        font-family:Arial, Helvetica, sans-serif;
+        font-family: Arial, Helvetica, sans-serif;
       }
       .frequency {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        font-size: 8em;
-        color: #FAFAFA;
+        font-size: clamp(3rem, 12vw, 8rem);
+        color: #fafafa;
         text-align: center;
+        white-space: nowrap;
       }
       #muteButton {
         height: 80px;
@@ -29,8 +34,10 @@
         border-radius: 50%;
         box-shadow: 0 3px 6px #0002;
         border: none;
-        outline: none;
-        transition: all .3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        transition:
+          background-color 0.3s,
+          box-shadow 0.3s,
+          transform 0.3s;
       }
       #muteButton.muted {
         background-image: url(./muted.svg);
@@ -40,6 +47,10 @@
         transform: translateY(2px);
         box-shadow: 0 1px 2px #0002;
       }
+      #muteButton:focus-visible {
+        outline: 3px solid #fafafa;
+        outline-offset: 3px;
+      }
     </style>
   </head>
   <body>
@@ -47,7 +58,13 @@
       <span class="frequency-value">000.0</span>
       <span>Hz</span>
     </div>
-    <button id="muteButton" class="muted"></button>
+    <button
+      id="muteButton"
+      class="muted"
+      type="button"
+      aria-label="Toggle theremin audio"
+      aria-pressed="false"
+    ></button>
     <script src="/main.js"></script>
   </body>
 </html>

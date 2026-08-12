@@ -2,22 +2,22 @@
   "include": [
     "$(MODDABLE)/examples/manifest_base.json",
     "$(MODDABLE)/examples/manifest_net.json",
-    "$(MODDABLE)/modules/io/manifest.json",
+    "$(MODDABLE)/examples/io/tcp/websocketclient/manifest_websocketclient.json",
     "./vl53l0x/manifest.json"
   ],
   "config": {
     "host": "192.168.7.112",
+    "port": 8080,
     "startupSound": false
   },
   "modules": {
-    "*": [
-      "./main",
-      "$(MODULES)/network/websocket/*",
-      "$(MODULES)/data/base64/*",
-      "$(MODULES)/data/logical/*",
-      "$(MODULES)/crypt/digest/*",
-      "$(MODULES)/crypt/digest/kcl/*"
-    ]
+    "*": "./main"
   },
-  "preload": ["websocket", "base64", "digest", "logical"]
+  "platforms": {
+    "esp32/m5stack": {},
+    "esp32/m5stack_fire": {},
+    "...": {
+      "error": "Theremin requires M5Stack and a VL53L0X unit"
+    }
+  }
 }
