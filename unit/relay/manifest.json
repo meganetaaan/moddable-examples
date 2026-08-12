@@ -6,7 +6,7 @@
   ],
 	"resources":{
 		"*-alpha": [
-			"$(MODDABLE)/examples/assets/fonts//OpenSans-Semibold-20"
+			"$(MODDABLE)/examples/assets/fonts/OpenSans-Semibold-20"
     ],
     "*": ["./images/*"]
 	},

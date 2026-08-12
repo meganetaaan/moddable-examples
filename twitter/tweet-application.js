@@ -17,8 +17,6 @@ import WipeTransition from 'piu/WipeTransition'
 
 const HEADER_HEIGHT = 32
 const QUERY = 'M5Stack'
-// const APPLICATION_WIDTH = 320
-// const APPLICATION_HEIGHT = 240
 const ParagraphStyle = Style.template({
   font: 'Cica-Regular',
   color: '#222222',
@@ -82,7 +80,6 @@ const TitleLabel = Label.template(({ title, ...props }) => ({
 
 const IndexLabel = Label.template(({ current, total, ...props }) => ({
   Style: IndexStyle,
-  // zero-beggining to one-beggining
   string: `(${current + 1}/${total})`,
   ...props,
   Behavior: class extends Behavior {
@@ -99,7 +96,6 @@ const IndexLabel = Label.template(({ current, total, ...props }) => ({
   }
 }))
 
-// TODO: remove duplication
 const ReplyTexture = Texture.template({ path: 'comment_18x18-alpha.bmp' })
 const ReplySkin = Skin.template({
   color: '#888888',
@@ -107,24 +103,6 @@ const ReplySkin = Skin.template({
   height: 18,
   width: 18
 })
-const ReplyCount = Container.template(({ count, ...props }) => ({
-  height: 20,
-  width: 60,
-  contents: [
-    new Content(null, {
-      left: 0,
-      top: 2,
-      Skin: ReplySkin
-    }),
-    new Label(null, {
-      left: 20,
-      Style: CountStyle,
-      string: `${count}`
-    })
-  ],
-  ...props
-}))
-
 const RetweetTexture = Texture.template({ path: 'retweet_18x18-alpha.bmp' })
 const RetweetSkin = Skin.template({
   color: '#888888',
@@ -132,24 +110,6 @@ const RetweetSkin = Skin.template({
   height: 18,
   width: 18
 })
-const RetweetCount = Container.template(({ count, ...props }) => ({
-  height: 20,
-  width: 60,
-  contents: [
-    new Content(null, {
-      left: 0,
-      top: 2,
-      Skin: RetweetSkin
-    }),
-    new Label(null, {
-      left: 20,
-      Style: CountStyle,
-      string: `${count}`
-    })
-  ],
-  ...props
-}))
-
 const FavoriteTexture = Texture.template({ path: 'favorite_18x18-alpha.bmp' })
 const FavoriteSkin = Skin.template({
   color: '#888888',
@@ -157,14 +117,14 @@ const FavoriteSkin = Skin.template({
   height: 18,
   width: 18
 })
-const FavoriteCount = Container.template(({ count, ...props }) => ({
+const MetricCount = Container.template(({ count, metricSkin, ...props }) => ({
   height: 20,
   width: 60,
   contents: [
     new Content(null, {
       left: 0,
       top: 2,
-      Skin: FavoriteSkin
+      Skin: metricSkin
     }),
     new Label(null, {
       left: 20,
@@ -198,7 +158,7 @@ const Header = Container.template(({ title, icon, current, total, ...props }) =>
       current,
       total
     })
-  ], // TODO
+  ],
   ...props,
   Behavior: class extends Behavior {
     onCreate (it) {
@@ -224,7 +184,7 @@ const Tweet = Container.template(({ tweet }) => {
     ...filledPosition,
     skin: new Skin({ fill: '#FAFAFA' }),
     contents: [
-    // screen name
+      // screen name
       new Port(null, {
         Skin: IconSkin,
         top: 4,
@@ -233,7 +193,6 @@ const Tweet = Container.template(({ tweet }) => {
         height: 36,
         Behavior: class extends Behavior {
           onDraw (port) {
-          // port.fillColor('blue', 0, 0, port.width, port.height)
             port.drawContent(0, 0, port.width, port.height)
           }
         }
@@ -277,29 +236,21 @@ const Tweet = Container.template(({ tweet }) => {
           })
         ]
       }),
-      /*
-      new Text(null, {
-        top: 42,
-        left: 4,
-        right: 4,
-        bottom: 24,
-        Style: ParagraphStyle,
-        string: tweet.text,
-        clip: true
-      }),
-      */
-      new ReplyCount({
+      new MetricCount({
         count: tweet.reply_count ?? 0,
+        metricSkin: ReplySkin,
         bottom: 4,
         left: 44
       }),
-      new RetweetCount({
+      new MetricCount({
         count: tweet.retweet_count,
+        metricSkin: RetweetSkin,
         bottom: 4,
         left: 134
       }),
-      new FavoriteCount({
+      new MetricCount({
         count: tweet.favorite_count,
+        metricSkin: FavoriteSkin,
         bottom: 4,
         left: 224
       })

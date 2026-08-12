@@ -10,7 +10,7 @@ export default [
   },
   js.configs.recommended,
   {
-    files: ['**/*.js'],
+    files: ['**/*.{js,mjs}'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -33,7 +33,6 @@ export default [
         console: readonly,
         device: readonly,
         document: readonly,
-        global: readonly,
         location: readonly,
         navigator: readonly,
         native: readonly,
@@ -52,6 +51,7 @@ export default [
   {
     files: [
       'ble/web-server.js',
+      'scripts/**/*.mjs',
       'test/**/*.js',
       'theremin/server/**/*.js'
     ],

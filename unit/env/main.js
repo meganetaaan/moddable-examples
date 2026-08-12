@@ -5,8 +5,8 @@ import EnvSensor from 'dht12'
 import Timer from 'timer'
 import config from 'mc/config'
 
-if (global.power) {
-  global.power.setBrightness(8)
+if (globalThis.power) {
+  globalThis.power.setBrightness(8)
 }
 
 const envSensor = new EnvSensor({

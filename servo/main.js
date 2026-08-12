@@ -32,7 +32,7 @@ function countup () {
   servo.setAngle(angle)
 }
 
-global.button.a.onChanged = function () {
+globalThis.button.a.onChanged = function () {
   if (this.read()) {
     countup()
   }

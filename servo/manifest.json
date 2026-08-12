@@ -11,6 +11,6 @@
     ]
   },
   "resources": {
-    "*-alpha": ["$(MODDABLE)/examples/assets/fonts//OpenSans-Regular-52"]
+    "*-alpha": ["$(MODDABLE)/examples/assets/fonts/OpenSans-Regular-52"]
   }
 }
