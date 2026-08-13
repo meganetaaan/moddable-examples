@@ -2,36 +2,31 @@
   "include": [
     "$(MODDABLE)/examples/manifest_base.json",
     "$(MODDABLE)/examples/manifest_piu.json",
-    "$(MODDABLE)/modules/pins/i2c/manifest.json"
+    "$(MODDABLE)/modules/io/manifest.json"
   ],
   "modules": {
-    "*": ["$(MODDABLE)/modules/pins/i2c/esp32/*", "./*"],
-    "pins/i2c": "$(MODDABLE)/modules/pins/i2c/i2c"
+    "*": "./*"
   },
-  "preload": ["pins/i2c", "dht12", "sht3x"],
   "platforms": {
     "esp32/m5stack": {
       "config": {
-        "unit_sda": 21,
-        "unit_scl": 22
+        "unit_i2c": "default"
       }
     },
     "esp32/m5stack_fire": {
       "config": {
-        "unit_sda": 21,
-        "unit_scl": 22
+        "unit_i2c": "default"
       }
     },
     "esp32/m5stick_c": {
       "config": {
-        "unit_sda": 0,
-        "unit_scl": 26
+        "unit_i2c": "hat"
       }
     }
   },
   "resources": {
-		"*-alpha": [
-			"$(MODDABLE)/examples/assets/fonts//OpenSans-Semibold-16"
-		]
+    "*-alpha": [
+      "$(MODDABLE)/examples/assets/fonts//OpenSans-Semibold-16"
+    ]
   }
 }
