@@ -1,42 +1,48 @@
 /*
- * Copyright (c) 2019-2020 Shinya Ishikawa
- *
+ * Copyright (c) 2019-2026 Shinya Ishikawa
  */
-import I2C from 'pins/i2c'
 
-const SCALE = {
-  CELSIUS: 1,
-  KELVIN: 2,
-  FAHRENHEIT: 3
-}
+export default class DHT12 {
+  #io
+  #values = new Uint8Array(5)
 
-export default class DHT12 extends I2C {
-  constructor(dictionary) {
-    super({ address: 0x5c, ...dictionary })
-    this._scale = dictionary.scale ?? SCALE.CELSIUS
+  constructor (options = {}) {
+    const { sensor } = options
+    if (typeof sensor?.io !== 'function') throw new TypeError('sensor.io required')
+
+    if ('target' in options) this.target = options.target
+    this.#io = new sensor.io({
+      address: 0x5c,
+      hz: 400_000,
+      ...sensor
+    })
   }
 
-  readEnvironment(s = this._scale) {
-    this.write(0)
-    const bytes = this.read(4)
-    let temperature
-    switch (s) {
-      case SCALE.CELSIUS:
-        temperature = bytes[2] + bytes[3] / 10
-        break
-      case SCALE.FAHRENHEIT:
-        temperature = (bytes[2] + bytes[3] / 10) * 1.8 + 32
-        break
-      case SCALE.KELVIN:
-        temperature = bytes[2] + bytes[3] / 10 + 273.15
-        break
-      default:
-        throw new Error('Scale not supported')
+  sample () {
+    const values = this.#values
+    this.#io.write(Uint8Array.of(0))
+    this.#io.read(values)
+
+    const checksum = (values[0] + values[1] + values[2] + values[3]) & 0xff
+    if (checksum !== values[4]) {
+      return { hygrometer: {}, thermometer: {} }
     }
-    const humidity = bytes[0] + bytes[1] / 10
+
+    let temperature = values[2] + (values[3] & 0x7f) / 10
+    if (values[3] & 0x80) temperature = -temperature
+
     return {
-      temperature,
-      humidity
+      hygrometer: { humidity: values[0] + values[1] / 10 },
+      thermometer: { temperature }
     }
+  }
+
+  close () {
+    this.#io?.close()
+    this.#io = undefined
+  }
+
+  static {
+    this.prototype[Symbol.dispose] = this.prototype.close
   }
 }
