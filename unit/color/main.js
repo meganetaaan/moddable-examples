@@ -8,8 +8,8 @@ import config from 'mc/config'
 
 const FONT = 'OpenSans-Semibold-16'
 
-if (global.power) {
-  global.power.setBrightness(10)
+if (globalThis.power) {
+  globalThis.power.setBrightness(10)
 }
 
 const application = new Application(null, {

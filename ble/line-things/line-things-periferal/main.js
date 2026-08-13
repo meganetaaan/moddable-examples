@@ -2,7 +2,7 @@ import LineThingsApplication from 'line-things-application'
 import LineThingsServer from 'line-things-server'
 
 const server = new LineThingsServer()
-const buttonA = global.button.a
+const buttonA = globalThis.button.a
 const application = new LineThingsApplication({
   server,
   message: 'HELLO'

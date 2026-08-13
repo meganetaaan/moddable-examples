@@ -2,7 +2,6 @@ import Twitter from 'twitter'
 import tweets from 'tweets'
 import TweetApplication from 'tweet-application'
 
-// TODO: indicator
 import { Label, Skin, Style } from 'piu/MC'
 
 const search = Twitter.search

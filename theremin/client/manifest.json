@@ -6,12 +6,15 @@
     "./vl53l0x/manifest.json"
   ],
   "config": {
-    "host": "192.168.7.112",
+    "host": "YOUR_SERVER_HOST_HERE",
     "port": 8080,
     "startupSound": false
   },
   "modules": {
-    "*": "./main"
+    "*": [
+      "./frequency",
+      "./main"
+    ]
   },
   "platforms": {
     "esp32/m5stack": {},

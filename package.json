@@ -9,6 +9,8 @@
     "eslint": "10.8.1"
   },
   "scripts": {
+    "build:examples": "node scripts/build-examples.mjs",
+    "check": "npm run lint && npm test",
     "lint": "eslint .",
     "test": "node --test"
   },

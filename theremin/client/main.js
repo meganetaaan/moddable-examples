@@ -1,13 +1,14 @@
 import config from 'mc/config'
 import Timer from 'timer'
 import ToF from 'vl53l0x'
+import frequencyFromDistance from 'frequency'
 
 const FPS = 15
-const MIN_DISTANCE = 50
-const MAX_DISTANCE = 500
-const KEY_A = 440
-const SLOPE = -1 / 450
-const OFFSET = 10 / 9
+const HOST_PLACEHOLDER = 'YOUR_SERVER_HOST_HERE'
+
+if (!config.host || config.host === HOST_PLACEHOLDER) {
+  throw new Error('Set config.host to the Theremin server address')
+}
 
 const sensor = new ToF({
   sensor: {
@@ -18,13 +19,6 @@ const sensor = new ToF({
 const WebSocketClient = device.network.ws.io
 let timer
 let writable = 0
-
-function frequencyFromDistance (millimeters) {
-  const distance = Math.floor(
-    Math.min(MAX_DISTANCE, Math.max(millimeters, MIN_DISTANCE))
-  )
-  return KEY_A * Math.pow(2, distance * SLOPE + OFFSET)
-}
 
 function sendFrequency () {
   const distance = sensor.sample().proximity.distance
