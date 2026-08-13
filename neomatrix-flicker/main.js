@@ -23,14 +23,13 @@ const fluid = {
 
 const TextStyle = Style.template({
   font: 'cg-pixel-4x5',
-  // font: 'k8x12',
   color: 'green',
   horizontal: 'left'
 })
 
 const letter = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-let LoveApplication = Application.template(() => ({
+const LoveApplication = Application.template(() => ({
   top: 0,
   bottom: 0,
   left: 0,
@@ -50,7 +49,6 @@ let LoveApplication = Application.template(() => ({
 export default function () {
   new LoveApplication(null, {
     pixels: 25,
-    // pixels: 256,
     displayListLength: 4096 * 10,
     touchCount: 0
   })

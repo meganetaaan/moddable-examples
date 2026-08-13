@@ -9,9 +9,7 @@ export default [
       // XS native bindings use legacy syntax that ESLint cannot parse. These
       // exclusions disappear in the PRs that replace the bindings.
       'ble/line-things/line-things-periferal/mac-address.js',
-      'bongo_colorful/cryptdigest/mac-address.js',
-      'neomatrix/neomatrix-render.js',
-      'neomatrix-flicker/neomatrix-render.js'
+      'bongo_colorful/cryptdigest/mac-address.js'
     ]
   },
   js.configs.recommended,

@@ -1,22 +1,26 @@
 {
-	"include": [
-		"$(MODDABLE)/examples/manifest_base.json",
-	],
-	"modules": {
-		"*": [
-			"$(MODULES)/drivers/neopixel/*",
-			"./main",
-		],
-	},
-	"preload": "neopixel",
-	"platforms": {
-		"esp32": {
-			"modules": {
-				"*": "$(MODULES)/drivers/neopixel/esp32/*",
-			},
-		},
-		"...": {
-			"error": "unsupported platform"
-		},
-	}
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODULES)/drivers/neopixel/manifest.json"
+  ],
+  "modules": {
+    "*": "./main",
+    "neomatrix": "../shared/neomatrix",
+    "neomatrix-utils": "../shared/neomatrix-utils"
+  },
+  "config": {
+    "flame": {
+      "width": 16,
+      "height": 16,
+      "pin": 25,
+      "order": "GRB",
+      "brightness": 64
+    }
+  },
+  "platforms": {
+    "esp32": {},
+    "...": {
+      "error": "unsupported platform"
+    }
+  }
 }

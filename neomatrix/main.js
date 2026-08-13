@@ -6,7 +6,7 @@ import Timer from 'timer'
 const heart = parseBMP(new Resource('heart-color.bmp'))
 heart.alpha = parseBMP(new Resource('heart-alpha.bmp'))
 
-let render = new Poco(global.screen, {
+const render = new Poco(globalThis.screen, {
   pixels: 256
 })
 
@@ -17,7 +17,7 @@ function tick (heartRate, fps) {
 const FPS = 20
 const black = render.makeColor(0, 0, 0)
 
-let heartRate = 60
+const heartRate = 60
 let deg = 0
 
 Timer.repeat(() => {

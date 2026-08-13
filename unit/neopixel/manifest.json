@@ -1,22 +1,40 @@
 {
-	"include": [
-		"$(MODDABLE)/examples/manifest_base.json"
-	],
-	"modules": {
-		"*": [
-			"$(MODULES)/drivers/neopixel/*",
-			"./main"
-		]
-	},
-	"preload": "neopixel",
-	"platforms": {
-		"esp32": {
-			"modules": {
-				"*": "$(MODULES)/drivers/neopixel/esp32/*"
-			}
-		},
-		"...": {
-			"error": "unsupported platform"
-		}
-	}
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODULES)/drivers/neopixel/manifest.json"
+  ],
+  "modules": {
+    "*": "./main"
+  },
+  "config": {
+    "led": {
+      "length": 10,
+      "pin": 15,
+      "order": "RGB",
+      "brightness": 128
+    }
+  },
+  "platforms": {
+    "esp32/m5stack": {
+      "config": {
+        "led": {
+          "length": 29,
+          "pin": 21
+        }
+      }
+    },
+    "esp32/m5stack_fire": {},
+    "esp32/m5stick_c": {
+      "config": {
+        "led": {
+          "length": 29,
+          "pin": 32
+        }
+      }
+    },
+    "esp32": {},
+    "...": {
+      "error": "unsupported platform"
+    }
+  }
 }
