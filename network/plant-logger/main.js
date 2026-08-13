@@ -1,16 +1,16 @@
 import Timer from 'timer'
 
-import Analog from 'pins/analog'
-import Digital from 'pins/digital'
-
 const ANALOG_READ_PIN = 26
 const DIGITAL_READ_PIN = 36
-/* global trace */
-
 const INTERVAL = 1000
 
-Timer.repeat((_) => {
-  let value1 = Analog.read(ANALOG_READ_PIN)
-  let value2 = Digital.read(DIGITAL_READ_PIN)
-  trace(`value1: ${value1}, value2: ${value2}`)
+const analog = new device.io.Analog({ pin: ANALOG_READ_PIN })
+const Digital = device.io.Digital
+const digital = new Digital({
+  pin: DIGITAL_READ_PIN,
+  mode: Digital.Input
+})
+
+Timer.repeat(() => {
+  trace(`analog: ${analog.read()}, digital: ${digital.read()}\n`)
 }, INTERVAL)

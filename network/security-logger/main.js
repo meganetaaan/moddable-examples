@@ -5,14 +5,15 @@
 
 import Timer from 'timer'
 
-import Digital from 'pins/digital'
-
 const DIGITAL_READ_PIN = 36
-/* global trace */
-
 const INTERVAL = 1000
 
-Timer.repeat((_) => {
-  let value1 = Digital.read(DIGITAL_READ_PIN)
-  trace(`value1: ${value1}\r`)
+const Digital = device.io.Digital
+const sensor = new Digital({
+  pin: DIGITAL_READ_PIN,
+  mode: Digital.Input
+})
+
+Timer.repeat(() => {
+  trace(`value: ${sensor.read()}\n`)
 }, INTERVAL)
