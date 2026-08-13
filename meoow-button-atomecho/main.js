@@ -2,6 +2,7 @@ import AudioOut from 'pins/audioout';
 import Resource from 'Resource';
 import NeoPixel from 'neopixel';
 import { Request } from 'http';
+import Timer from 'timer';
 
 const np = new NeoPixel({ length: 1, pin: 27, order: 'GRB' });
 const black = np.makeRGB(0, 0, 0);
@@ -9,6 +10,7 @@ const pink = np.makeRGB(255, 127, 127);
 const HOST = 'maker.ifttt.com';
 const API_KEY = 'YOUR_API_KEY_HERE';
 const EVENT = 'moddable_button_pressed';
+const speaker = new AudioOut({ streams: 1 });
 
 const on = () => {
   np.fill(pink);
@@ -51,5 +53,5 @@ buttonA.onChanged = function () {
 }
 
 on();
-Time.delay(500);
+Timer.delay(500);
 off();

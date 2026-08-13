@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   const socket = new WebSocket(`ws://${location.host}/`)
-  socket.onopen = (e) => {
+  socket.onopen = () => {
     console.log('connected')
   }
   socket.onmessage = (event) => {
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     oscillator.setFrequency(tone)
     heltz.innerText = tone.toFixed(1)
   }
-  socket.onclose = (e) => {
+  socket.onclose = () => {
     console.log('disconnected')
   }
 })

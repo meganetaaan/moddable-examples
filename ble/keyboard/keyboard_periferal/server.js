@@ -34,10 +34,10 @@ class BLEKeyboardServer extends BLEServer {
     this.authenticated = true
     trace('server authenticated')
   }
-  onConnected (connection) {
+  onConnected (_connection) {
     this.stopAdvertising()
   }
-  onDisconnected (connection) {
+  onDisconnected (_connection) {
     this.startAdvertising({
       advertisingData: {
         flags: 6,
@@ -55,12 +55,12 @@ class BLEKeyboardServer extends BLEServer {
     let passkey = this.passkeyToString(params.passkey)
     trace(`server display passkey: ${passkey}\n`)
   }
-  onPasskeyRequested (params) {
+  onPasskeyRequested (_params) {
     let passkey = Math.round(Math.random() * 999999)
     trace(`server requested passkey: ${this.passkeyToString(passkey)}\n`)
     return passkey
   }
-  onCharacteristicWritten (params, value) {
+  onCharacteristicWritten (_params, value) {
     trace(value)
   }
   passkeyToString (passkey) {

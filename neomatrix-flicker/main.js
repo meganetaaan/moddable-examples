@@ -30,7 +30,7 @@ const TextStyle = Style.template({
 
 const letter = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-let LoveApplication = Application.template((_) => ({
+let LoveApplication = Application.template(() => ({
   top: 0,
   bottom: 0,
   left: 0,
@@ -48,7 +48,6 @@ let LoveApplication = Application.template((_) => ({
 }))
 
 export default function () {
-  /* eslint-disable no-new */
   new LoveApplication(null, {
     pixels: 25,
     // pixels: 256,

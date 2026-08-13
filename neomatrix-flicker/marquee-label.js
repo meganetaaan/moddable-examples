@@ -44,7 +44,7 @@ class MarqueeBehavior extends Behavior {
 }
 
 const MarqueeLabel = Container.template(
-  ({ left, right, top, bottom, width, height, x, y, name, state, string, Skin, Style }) => ({
+  ({ left, right, top, bottom, width, height, x, y, name, state, string, Style }) => ({
     left,
     right,
     top,

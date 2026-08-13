@@ -32,8 +32,7 @@ class Flame {
 	}
 
 	update() {
-		let cooldown, i, j, x, l, pre;
-		l = this.width * this.height
+		let cooldown, i, j, x, pre;
 
 		// copy and cooldown
 		for (i = this.height - 1; i > 0; i--) {

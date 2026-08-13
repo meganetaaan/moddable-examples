@@ -1,11 +1,11 @@
 {
 	"build": {
-		"SDKCONFIGPATH": "/projects/moddable-examples/psram/sdkconfig"
+		"SDKCONFIGPATH": "./sdkconfig"
 	},
 	"include": "$(MODDABLE)/examples/manifest_base.json",
 	"modules": {
 		"*": [
 			"./main"
 		]
-	},
+	}
 }

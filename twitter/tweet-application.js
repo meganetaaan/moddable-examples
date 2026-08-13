@@ -307,7 +307,7 @@ const Tweet = Container.template(({ tweet }) => {
   }
 })
 
-const Body = Container.template(({ tweets, current, total, ...props }) => ({
+const Body = Container.template(({ tweets, current, total: _total, ...props }) => ({
   skin: new Skin({ fill: '#FAFAFA' }),
   contents: [new Tweet({ tweet: tweets.statuses[current] })],
   Behavior: class extends Behavior {
