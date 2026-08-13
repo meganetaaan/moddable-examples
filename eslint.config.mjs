@@ -54,12 +54,12 @@ export default [
   {
     files: ['theremin/server/**/*.js'],
     languageOptions: {
-      sourceType: 'commonjs',
+      sourceType: 'module',
       globals: {
-        __dirname: readonly,
-        module: readonly,
+        clearTimeout: readonly,
+        fetch: readonly,
         process: readonly,
-        require: readonly
+        setTimeout: readonly
       }
     }
   }
