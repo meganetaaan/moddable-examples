@@ -3,36 +3,40 @@
     "$(MODDABLE)/examples/manifest_base.json",
     "$(MODDABLE)/examples/manifest_net.json",
     "$(MODDABLE)/examples/manifest_piu.json",
-    "$(MODDABLE)/modules/crypt/tls.json"
+    "$(MODDABLE)/examples/io/tcp/httpsclient/manifest_httpsclient.json",
+    "$(MODULES)/data/text/decoder/manifest.json"
   ],
   "modules": {
     "*": [
       "./main",
       "./tweet-application",
-      "./secret-token",
       "./twitter",
-      "./tweets",
-      "$(MODULES)/network/http/*"
-    ]
+      "./tweets"
+    ],
+    "http-client": "../shared/http-client",
+    "normalize-search": "./normalize-search"
   },
   "resources": {
     "*": ["./assets/icons/*", "./assets/images/*"],
     "*-alpha": ["./assets/fonts/*"]
   },
   "data": {
-    "*": [
-      "./cert/digicerthasca",
-      "./cert/digicertssca",
-      "$(MODULES)/crypt/data/ca107",
-      "./test.json"
-    ]
+    "*": "$(MODULES)/crypt/data/ca109"
   },
   "config": {
-    "sntp": "pool.ntp.org"
+    "sntp": "pool.ntp.org",
+    "xBearerToken": "YOUR_BEARER_TOKEN_HERE"
   },
-  "preload": ["http", "tweets", "twitter", "tweet-application"],
+  "preload": ["tweets", "twitter", "tweet-application"],
   "creation": {
     "stack": 512,
     "static": 131072
+  },
+  "platforms": {
+    "esp32/m5stack": {},
+    "esp32/m5stack_fire": {},
+    "...": {
+      "error": "X Search requires an M5Stack display and buttons"
+    }
   }
 }

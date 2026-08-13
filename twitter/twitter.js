@@ -1,52 +1,32 @@
-import { Request } from 'http'
-import SecureSocket from 'securesocket'
-import secret from 'secret-token'
+import config from 'mc/config'
+import requestText from 'http-client'
+import normalizeSearch from 'normalize-search'
 
-const HOST = 'api.twitter.com'
-const BEARER_TOKEN = secret.BEARER_TOKEN
-const KEYS = [
-  'statuses',
-  'id',
-  'created_at',
-  'text',
-  'user',
-  'name',
-  'screen_name',
-  'retweet_count',
-  'favorite_count',
-  'profile_image_url'
-]
+const HOST = 'api.x.com'
+const PLACEHOLDER = 'YOUR_BEARER_TOKEN_HERE'
+const SEARCH_OPTIONS = [
+  'tweet.fields=author_id,public_metrics',
+  'expansions=author_id',
+  'user.fields=name,username',
+  'max_results=10'
+].join('&')
 
-const search = async (q) => {
-  return new Promise((resolve, reject) => {
-    let request = new Request({
-      host: HOST,
-      port: 443,
-      path: `/1.1/search/tweets.json?q=${q}&count=3`,
-      headers: ['Authorization', `Bearer ${BEARER_TOKEN}`],
-      Socket: SecureSocket,
-      secure: {
-        trace: true,
-        protocolVersion: 0x303
-      },
-      response: String
-    })
-    request.callback = function (message, value) {
-      if (message === -2) {
-        reject(new Error('Bad request'))
-      }
+async function search (query) {
+  if (!config.xBearerToken || config.xBearerToken === PLACEHOLDER) {
+    throw new Error('Set config.xBearerToken before searching X')
+  }
 
-      if (Request.responseComplete === message) {
-        value = JSON.parse(value, KEYS)
-        // value = JSON.parse(value)
-        resolve(value)
-      }
-    }
+  const body = await requestText(device.network.https, {
+    host: HOST,
+    path: `/2/tweets/search/recent?query=${encodeURIComponent(query)}&${SEARCH_OPTIONS}`,
+    headers: new Map([
+      ['authorization', `Bearer ${config.xBearerToken}`],
+      ['user-agent', 'moddable-examples/9.0.0']
+    ]),
+    maxBytes: 96 * 1024
   })
+
+  return normalizeSearch(JSON.parse(body))
 }
 
-const Twitter = {
-  search: search
-}
-
-export default Twitter
+export default Object.freeze({ search })

@@ -1,4 +1,3 @@
 node_modules/
 .vscode/
 tmp/
-secret-token.js

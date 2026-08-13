@@ -5,8 +5,6 @@ import TweetApplication from 'tweet-application'
 // TODO: indicator
 import { Label, Skin, Style } from 'piu/MC'
 
-/* global trace */
-
 const search = Twitter.search
 const QUERY = 'M5Stack'
 let isUpdating = false
@@ -32,36 +30,38 @@ const Indicator = Label.template(() => ({
   string: 'updating...'
 }))
 
-if (global.button != null) {
-  // setting callbacks
-  global.button.a.onChanged = function () {
-    if (!isUpdating && this.read()) {
-      app.delegate('onPrevious')
-    }
+// M5Stack's target setup owns these pins and exposes its buttons globally.
+globalThis.button.a.onChanged = function () {
+  if (!isUpdating && this.read()) {
+    app.delegate('onPrevious')
   }
-  global.button.b.onChanged = async function () {
-    if (!isUpdating && this.read()) {
-      isUpdating = true
-      const indicator = new Indicator()
-      app.add(indicator)
-      try {
-        const result = await search(QUERY)
-        if (result.statuses.length === 0) {
-          trace('no update')
-          return
-        }
+}
+
+globalThis.button.b.onChanged = async function () {
+  if (!isUpdating && this.read()) {
+    isUpdating = true
+    const indicator = new Indicator()
+    app.add(indicator)
+    try {
+      const result = await search(QUERY)
+      if (result.statuses.length === 0) {
+        trace('No recent posts found\n')
+      } else {
         app.delegate('onPropsChanged', result)
-      } catch (e) {
-        trace(e)
-      } finally {
-        app.remove(indicator)
-        isUpdating = false
       }
-    }
-  }
-  global.button.c.onChanged = function () {
-    if (!isUpdating && this.read()) {
-      app.delegate('onNext')
+    } catch (error) {
+      trace(`X search failed: ${error}\n`)
+    } finally {
+      app.remove(indicator)
+      isUpdating = false
     }
   }
 }
+
+globalThis.button.c.onChanged = function () {
+  if (!isUpdating && this.read()) {
+    app.delegate('onNext')
+  }
+}
+
+export default app

@@ -1,15 +1,27 @@
 {
-	"include": [
-		"$(MODDABLE)/examples/manifest_base.json",
-		"$(MODDABLE)/examples/manifest_net.json",
-	],
-	"modules": {
-		"*": [
-			"./main",
-			"$(MODULES)/network/http/*"
-		]
-	},
-	"preload": [
-		"http"
-	]
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/examples/manifest_net.json",
+    "$(MODDABLE)/examples/io/tcp/httpsclient/manifest_httpsclient.json",
+    "$(MODULES)/data/text/decoder/manifest.json"
+  ],
+  "modules": {
+    "*": "./main",
+    "http-client": "../../shared/http-client",
+    "ifttt": "../../shared/ifttt"
+  },
+  "data": {
+    "*": "$(MODULES)/crypt/data/ca222"
+  },
+  "config": {
+    "iftttEvent": "moddable_button_pressed",
+    "iftttKey": "YOUR_WEBHOOK_KEY_HERE"
+  },
+  "platforms": {
+    "esp32/m5stack": {},
+    "esp32/m5stack_fire": {},
+    "...": {
+      "error": "IFTTT Client requires M5Stack buttons"
+    }
+  }
 }
