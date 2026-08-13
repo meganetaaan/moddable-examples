@@ -1,11 +1,15 @@
 {
   "name": "moddable-examples-mai5-ble-central",
+  "version": "1.0.0",
   "private": true,
-  "author": "Shinya Ishikawa",
+  "type": "module",
+  "description": "Web Bluetooth central for the Mai5 example",
   "scripts": {
-    "start": "http-server"
+    "start": "node ../../web-server.js"
   },
-  "devDependencies": {
-    "http-server": "^0.12.3"
-  }
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
+  "author": "Shinya Ishikawa",
+  "license": "MIT"
 }

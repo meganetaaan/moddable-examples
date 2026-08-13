@@ -1,77 +1,79 @@
-const DEVICE_NAME = 'QR Server'
 const SERVICE_UUID = '6b0d0503-dcaa-4041-8ab4-630d7d9017dc'
 const CHARACTERISTIC_UUID = 'bea0c847-4238-40d2-b693-4dadab33395e'
-// https://developers.google.com/web/updates/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
+const MAX_CHUNK_BYTES = 20
+const MAX_QR_BYTES = 200
 
 class BLEClient {
-  consturctor () {
+  constructor (bluetooth = globalThis.navigator?.bluetooth) {
+    this.bluetooth = bluetooth
+    this.device = undefined
     this.isConnected = false
-    this.connectedCharacteristic = null
+    this.characteristic = undefined
   }
+
   async sendText (text) {
-    const encoder = new TextEncoder('utf-8')
-    if (!this.isConnected) {
-      return
+    if (!this.isConnected || !this.characteristic) {
+      throw new Error('Bluetooth device is not connected')
     }
-    const characteristic = this.connectedCharacteristic
-    const buf = encoder.encode(text)
-    const PACKET_LENGTH = 18
-    let idx = 0
-    while (true) {
-      const subBuf = buf.slice(idx, idx + PACKET_LENGTH)
-      if (subBuf.length === 0) {
-        break
-      }
-      try {
-        await characteristic.writeValue(subBuf)
-      } catch (e) {
-        console.error(e)
-      }
-      idx += PACKET_LENGTH
+    if (text.includes('\r')) {
+      throw new RangeError('QR text cannot contain a carriage return')
     }
-    await characteristic.writeValue(encoder.encode('\r'))
+
+    const bytes = new TextEncoder().encode(text)
+    if (bytes.byteLength > MAX_QR_BYTES) {
+      throw new RangeError(`QR text must be at most ${MAX_QR_BYTES} UTF-8 bytes`)
+    }
+
+    for (let offset = 0; offset < bytes.byteLength; offset += MAX_CHUNK_BYTES) {
+      await this.characteristic.writeValueWithResponse(
+        bytes.subarray(offset, offset + MAX_CHUNK_BYTES)
+      )
+    }
+    await this.characteristic.writeValueWithResponse(Uint8Array.of(0x0d))
   }
 
   async connect () {
-    if (navigator.bluetooth == null) {
-      console.warn('bluetooth not available')
-      return
+    if (!this.bluetooth) {
+      throw new Error('Web Bluetooth is not available in this browser')
     }
+    if (this.isConnected) return
+
+    let device
     try {
-      const device = await navigator.bluetooth.requestDevice({
-        acceptAllDevices: false,
-        filters: [{ name: DEVICE_NAME }, { services: [SERVICE_UUID] }]
+      device = await this.bluetooth.requestDevice({
+        filters: [{ services: [SERVICE_UUID] }]
       })
-      device.addEventListener('gattserverdisconnected', () => {
-        this._onDisconnected()
-      })
+      device.addEventListener(
+        'gattserverdisconnected',
+        () => this.#handleDisconnected()
+      )
+      if (!device.gatt) throw new Error('Bluetooth device has no GATT server')
+
       const server = await device.gatt.connect()
       const service = await server.getPrimaryService(SERVICE_UUID)
       const characteristic = await service.getCharacteristic(CHARACTERISTIC_UUID)
-      this._onConnected(characteristic)
-    } catch (e) {
-      console.log(e)
+      this.device = device
+      this.characteristic = characteristic
+      this.isConnected = true
+      this.onConnected?.()
+    } catch (error) {
+      device?.gatt?.disconnect()
+      throw error
     }
   }
 
-  _onConnected (characteristic) {
-    this.isConnected = true
-    this.connectedCharacteristic = characteristic
-    if (this.onConnected != null && typeof this.onConnected === 'function') {
-      this.onConnected(characteristic)
-    }
-  }
-
-  _onDisconnected () {
+  #handleDisconnected () {
+    this.device = undefined
+    this.characteristic = undefined
     this.isConnected = false
-    this.connectedCharacteristic = null
-    if (
-      this.onDisconnected != null &&
-      typeof this.onDisconnected === 'function'
-    ) {
-      this.onDisconnected()
-    }
+    this.onDisconnected?.()
   }
 }
 
+export {
+  CHARACTERISTIC_UUID,
+  MAX_CHUNK_BYTES,
+  MAX_QR_BYTES,
+  SERVICE_UUID
+}
 export default BLEClient

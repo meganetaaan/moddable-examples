@@ -1,5 +1,3 @@
-/* global */
-
 import { Application, Style, Skin, Label, Behavior } from 'piu/MC'
 import WipeTransition from 'piu/WipeTransition'
 
@@ -50,7 +48,6 @@ class ServerBehavior extends Behavior {
       )
       application.run(transition, application.first, new StatusLabel($))
     }
-    application.server = server
   }
 }
 

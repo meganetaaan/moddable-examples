@@ -1,20 +1,15 @@
 {
-	"include": [
-		"$(MODDABLE)/examples/manifest_base.json",
-		"$(MODDABLE)/modules/network/ble/manifest_server.json"
-	],
-	"modules": {
-		"*": [
-			"./server",
-			"./main"
-		]
-	},
-	"preload": [
-		"server"
-	],
-	"ble": {
-		"*": [
-			"./bleservices/*"
-		]
-	}
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/modules/io/ble/server/manifest.json"
+  ],
+  "modules": {
+    "*": "./main"
+  },
+  "platforms": {
+    "esp32": {},
+    "...": {
+      "error": "The ECMA-419 BLE keyboard peripheral requires ESP32"
+    }
+  }
 }

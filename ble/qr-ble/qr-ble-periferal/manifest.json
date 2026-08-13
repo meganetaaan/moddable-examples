@@ -1,24 +1,24 @@
 {
-	"include": [
-		"$(MODDABLE)/examples/manifest_base.json",
-		"$(MODDABLE)/examples/manifest_commodetto.json",
-		"$(MODDABLE)/modules/network/ble/manifest_server.json"
-	],
-	"modules": {
-		"*": [
-			"$(MODULES)/data/qrcode/qrcode",
-			"$(MODULES)/data/qrcode/qrcodegen",
-			"./draw-qr",
-			"./qr-server",
-			"./main"
-		]
-	},
-	"preload": [
-		"hex", "qrcode", "draw-qr", "qr-server"
-	],
-	"ble": {
-		"*": [
-			"./bleservices/*"
-		]
-	}
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/examples/manifest_commodetto.json",
+    "$(MODDABLE)/modules/commodetto/qrcode/manifest.json",
+    "$(MODDABLE)/modules/data/qrcode/manifest.json",
+    "$(MODDABLE)/modules/io/ble/server/manifest.json"
+  ],
+  "modules": {
+    "*": [
+      "./qr-message",
+      "./draw-qr",
+      "./qr-server",
+      "./main"
+    ]
+  },
+  "platforms": {
+    "esp32/m5stack": {},
+    "esp32/m5stack_fire": {},
+    "...": {
+      "error": "QR BLE requires an M5Stack display and ESP32 BLE"
+    }
+  }
 }
