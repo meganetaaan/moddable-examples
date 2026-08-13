@@ -1,7 +1,6 @@
-/* global globalThis */
-import Servo from 'pins/servo'
 import Timer from 'timer'
 import { NeoMatrix } from 'neomatrix'
+import PWMServo from 'pwm-servo'
 
 let lights = globalThis.lights
 const BLACK = lights.makeRGB(0, 0, 0)
@@ -23,7 +22,8 @@ class Roboto {
       width: 5,
       height: 5
     })
-    this.servo = new Servo({
+    this.servo = new PWMServo({
+      io: device.io.PWM,
       pin: 25,
       min: 500,
       max: 2400

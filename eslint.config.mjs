@@ -18,7 +18,7 @@ export default [
   {
     files: ['**/*.js'],
     languageOptions: {
-      ecmaVersion: 2025,
+      ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
         Application: readonly,
@@ -29,6 +29,7 @@ export default [
         Label: readonly,
         Skin: readonly,
         Style: readonly,
+        TextDecoder: readonly,
         TextEncoder: readonly,
         Texture: readonly,
         WebSocket: readonly,

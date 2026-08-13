@@ -12,49 +12,56 @@
  *
  */
 
-import Digital from 'pins/digital'
 import Timer from 'timer'
 import { Application, Label, Image, Style, Skin } from 'piu/MC'
 
-const ap = new Application(null, {
+const Digital = device.io.Digital
+const relay = new Digital({
+  pin: 21,
+  mode: Digital.Output,
+  initialValue: 0
+})
+
+const application = new Application(null, {
   skin: new Skin({
-    fill: "white",
+    fill: 'white'
   }),
   contents: [
     new Label(null, {
-      name: "label",
+      name: 'label',
       top: 60,
       right: 0,
       left: 0,
-      vertical: "top",
+      vertical: 'top',
       style: new Style({
-        font: "OpenSans-Semibold-20",
-        color: ["red", "black"],
+        font: 'OpenSans-Semibold-20',
+        color: ['red', 'black']
       }),
-      string: "A HAPPY NEW YEAR 2021!!",
+      string: 'A HAPPY NEW YEAR 2021!!'
     }),
     new Image(null, {
       name: 'parrot',
       bottom: 0,
       left: 0,
-      path: "fastparrot.cs",
-      loop: true,
-    }),
-  ],
-});
+      path: 'fastparrot.cs',
+      loop: true
+    })
+  ]
+})
 
-let on = false;
+const label = application.content('label')
+const parrot = application.content('parrot')
+
+let on = false
 Timer.repeat(() => {
-  on = !on;
+  on = !on
+  label.state = on ? 0 : 1
   if (on) {
-    trace("on\n");
-    ap.content("label").state = 0;
-    ap.content("parrot").start()
-    Digital.write(21, 1);
+    trace('on\n')
+    parrot.start()
   } else {
-    trace("off\n");
-    ap.content("label").state = 1;
-    ap.content("parrot").stop()
-    Digital.write(21, 0);
+    trace('off\n')
+    parrot.stop()
   }
-}, 3000);
+  relay.write(on ? 1 : 0)
+}, 3000)
