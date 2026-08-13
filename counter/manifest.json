@@ -7,8 +7,13 @@
     "*": "./main"
   },
   "resources": {
-		"*-alpha": [
-			"$(MODDABLE)/examples/assets/fonts//OpenSans-Regular-52"
-		]
+    "*-alpha": "$(MODDABLE)/examples/assets/fonts/OpenSans-Regular-52"
+  },
+  "platforms": {
+    "esp32/m5stack": {},
+    "esp32/m5stack_fire": {},
+    "...": {
+      "error": "Counter requires an M5Stack button and display"
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Application, Style, Skin, Label } from 'piu/MC'
+import { Application, Image, Style, Skin, Label } from 'piu/MC'
 import Pomodoro, { MODE } from 'pomodoro'
 
 const FONT = 'OpenSans-Regular-52'
@@ -13,7 +13,7 @@ const timeLabel = new Label(null, {
 })
 
 const titleLabel = new Label(null, {
-  style: new Style({ font: FONT, color: 'white'}),
+  style: new Style({ font: FONT, color: 'white' }),
   skin: new Skin({
     fill: ['red', 'green']
   }),
@@ -28,7 +28,7 @@ const parrotImage = new Image(null, {
   bottom: 0,
   left: 0,
   path: 'fastparrot.cs',
-  loop: true,
+  loop: true
 })
 
 const application = new Application(null, {
@@ -40,29 +40,25 @@ const application = new Application(null, {
   })
 })
 
-const msecToTime = (msec) => {
+function formatTime (msec) {
   const sec = msec / 1000
-  return {
-    minutes: Math.floor(sec / 60),
-    seconds: Math.floor(sec % 60)
-  }
+  const minutes = String(Math.floor(sec / 60)).padStart(2, '0')
+  const seconds = String(Math.floor(sec % 60)).padStart(2, '0')
+  return `${minutes}:${seconds}`
 }
 
 const updateTime = (time) => {
-  const t = msecToTime(time)
-  const m = String(t.minutes).padStart(2, '0')
-  const s = String(t.seconds).padStart(2, '0')
-  timeLabel.string = `${m}:${s}`
-} 
+  timeLabel.string = formatTime(time)
+}
 
 const updateTitle = (mode) => {
   titleLabel.string = mode
   titleLabel.state = mode === MODE.WORK ? 0 : 1
 }
 
-const onTick = (time, _mode) => {
+const onTick = (time) => {
   updateTime(time)
-} 
+}
 
 const onStart = () => {
   parrotImage.start()
@@ -77,42 +73,32 @@ const onReset = (time, mode) => {
   updateTitle(mode)
 }
 
-const onFinish = () => {
-
-}
-
 const pomodoro = new Pomodoro({
   onStart,
   onPause,
   onTick,
-  onReset,
-  onFinish
+  onReset
 })
 
-if (global.button != null) {
-  // button handler for M5Stack
-  button.a.onChanged = function () {
-    if (this.read()) {
-      if (pomodoro.isPlaying) {
-        pomodoro.pause(pomodoro.time, pomodoro.mode)
-      } else {
-        pomodoro.start()
-      }
-    }
+// M5Stack's target setup owns these pins and exposes its buttons globally.
+globalThis.button.a.onChanged = function () {
+  if (!this.read()) return
+
+  if (pomodoro.isPlaying) {
+    pomodoro.pause()
+  } else {
+    pomodoro.start()
   }
-  button.b.onChanged = function () {
-    if (this.read()) {
-      const isPlaying = pomodoro.isPlaying
-      if (isPlaying) {
-        pomodoro.reset()
-      } else {
-        const mode =
-          pomodoro.mode === MODE.WORK
-          ? MODE.BREAK
-          : MODE.WORK
-        pomodoro.reset(mode)
-      }
-    }
+}
+
+globalThis.button.b.onChanged = function () {
+  if (!this.read()) return
+
+  if (pomodoro.isPlaying) {
+    pomodoro.reset()
+  } else {
+    const mode = pomodoro.mode === MODE.WORK ? MODE.BREAK : MODE.WORK
+    pomodoro.reset(mode)
   }
 }
 

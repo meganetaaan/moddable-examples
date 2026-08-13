@@ -1,4 +1,3 @@
-/* global trace */
 import { Application, Style, Skin, Label } from 'piu/MC'
 
 const FONT = 'OpenSans-Regular-52'
@@ -17,19 +16,15 @@ const application = new Application(null, {
   ]
 })
 
-const counts = {
-  a: 0
+let count = 0
+
+// M5Stack's target setup owns this pin and exposes the button globally.
+globalThis.button.a.onChanged = function () {
+  if (!this.read()) return
+
+  count += 1
+  trace(`${count}\n`)
+  application.first.string = String(count)
 }
 
-function countup (button) {
-  counts[button] += 1
-  trace(counts[button])
-  application.first.string = String(counts[button])
-}
-
-global.button.a.onChanged = function () {
-  const v = this.read()
-  if (v) {
-    countup('a')
-  }
-}
+export default application

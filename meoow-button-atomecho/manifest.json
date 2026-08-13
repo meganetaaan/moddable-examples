@@ -1,23 +1,41 @@
 {
   "include": [
     "$(MODDABLE)/examples/manifest_base.json",
-    "$(MODDABLE)/examples/manifest_net.json"
+    "$(MODDABLE)/examples/manifest_net.json",
+    "$(MODULES)/io/manifest.json",
+    "$(MODULES)/io/audioout/manifest.json",
+    "$(MODULES)/drivers/neopixel/manifest.json"
   ],
+  "config": {
+    "startupSound": false
+  },
   "modules": {
     "*": [
-      "$(MODULES)/drivers/neopixel/*",
-      "$(MODULES)/drivers/neopixel/esp32/*",
       "$(MODULES)/network/http/*",
-      "./main"
+      "./main",
+      {
+        "source": "$(MODULES)/data/views/maud/maudHeader",
+        "transform": "cdv",
+        "json": false,
+        "get": true,
+        "set": false
+      }
     ]
   },
   "preload": [
     "neopixel",
-    "http"
+    "http",
+    "maudHeader"
   ],
   "resources": {
     "*": [
       "./assets/sounds/*"
     ]
+  },
+  "platforms": {
+    "esp32/m5atom_echo": {},
+    "...": {
+      "error": "Meoow Button requires an M5Stack Atom Echo"
+    }
   }
 }

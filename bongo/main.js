@@ -6,34 +6,27 @@ import {
 } from 'piu/MC'
 import Sound from 'piu/Sound'
 
-const sounds = {
+const sounds = Object.freeze({
   high: new Sound({ path: 'bongo_high.wav' }),
   low: new Sound({ path: 'bongo_low.wav' }),
   meow: new Sound({ path: 'meow.wav' })
-}
+})
 
-function playSound (key) {
-  const sound = sounds[key]
-  if (sound != null) {
-    sound.play()
-  }
-}
-
-const deskTexture = new Texture('desk.png')
+const deskTexture = new Texture({ path: 'desk.png' })
 const DeskSkin = Skin.template({
   texture: deskTexture,
   width: 320,
   height: 240
 })
 
-const catTexture = new Texture('cat_face.png')
+const catTexture = new Texture({ path: 'cat_face.png' })
 const CatSkin = Skin.template({
   texture: catTexture,
   width: 225,
   height: 130
 })
 
-const handsTexture = new Texture('hands.png')
+const handsTexture = new Texture({ path: 'hands.png' })
 const HandsSkin = Skin.template({
   texture: handsTexture,
   width: 45,
@@ -42,7 +35,7 @@ const HandsSkin = Skin.template({
   variants: 45
 })
 
-const mouthTexture = new Texture('cat_mouth.png')
+const mouthTexture = new Texture({ path: 'cat_mouth.png' })
 const MouthSkin = Skin.template({
   texture: mouthTexture,
   width: 28,
@@ -51,7 +44,7 @@ const MouthSkin = Skin.template({
   variants: 28
 })
 
-const bongoTexture = new Texture('bongo.png')
+const bongoTexture = new Texture({ path: 'bongo.png' })
 const BongoSkin = Skin.template({
   texture: bongoTexture,
   width: 165,
@@ -107,33 +100,25 @@ const application = new Application(null, {
   ]
 })
 
-const buttonA = global.button.a
-const buttonB = global.button.b
-const buttonC = global.button.c
+// M5Stack's target setup owns these pins and exposes its buttons globally.
+const { a: buttonA, b: buttonB, c: buttonC } = globalThis.button
+
 buttonA.onChanged = function () {
-  const up = this.read()
-  // up/down hand
+  const up = Boolean(this.read())
   application.content('rightHand').variant = up ? 0 : 1
-  // play sound
-  if (up === 0) {
-    playSound('low')
-  }
+  if (!up) sounds.low.play()
 }
+
 buttonB.onChanged = function () {
-  const up = this.read()
+  const up = Boolean(this.read())
   application.content('mouth').state = up ? 0 : 1
-  if (up === 0) {
-    playSound('meow')
-  }
+  if (!up) sounds.meow.play()
 }
+
 buttonC.onChanged = function () {
-  const up = this.read()
-  // up/down hand
+  const up = Boolean(this.read())
   application.content('leftHand').variant = up ? 0 : 1
-  // play sound
-  if (up === 0) {
-    playSound('high')
-  }
+  if (!up) sounds.high.play()
 }
 
 export default application

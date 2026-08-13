@@ -3,10 +3,10 @@ import Timer from 'timer'
 const WORK_TIME = 60 * 1000 * 25
 const BREAK_TIME = 60 * 1000 * 5
 const TICK = 1000
-const MODE = {
+const MODE = Object.freeze({
   WORK: 'WORK',
-  BREAK: 'BREAK',
-}
+  BREAK: 'BREAK'
+})
 
 function noop () {
   // Nothing to do
@@ -16,24 +16,9 @@ function noop () {
  * Pomodoro Timer
  */
 class Pomodoro {
-  /**
-   * private tick handler
-   */
-  #handler = null
-
-  /**
-   * timer mode
-   */
+  #handler
   #mode = MODE.WORK
 
-  /**
-   * auto start
-   */
-  autoStart = false
-
-  /**
-   * event handler
-   */
   onStart
   onPause
   onFinish
@@ -48,87 +33,58 @@ class Pomodoro {
     this.onTick = onTick
     this.reset(MODE.WORK)
   }
-  /**
-   * start timer
-   */
-  start() {
-    if (this.#handler == null) {
-      this.#handler = Timer.repeat(this.#tick.bind(this), TICK)
-    }
-    if (this.onStart != null) {
-      this.onStart(this.time, this.mode)
-    }
+
+  start () {
+    if (this.#handler !== undefined) return
+
+    this.#handler = Timer.repeat(this.#tick.bind(this), TICK)
+    this.onStart(this.time, this.mode)
   }
 
-  /**
-   * pause timer
-   */
-  pause() {
-    if (this.#handler != null) {
+  pause () {
+    if (this.#handler !== undefined) {
       Timer.clear(this.#handler)
-      this.#handler = null
+      this.#handler = undefined
     }
-    if (this.onPause != null) {
-      this.onPause(this.time, this.mode)
-    }
+    this.onPause(this.time, this.mode)
   }
 
-  /**
-   * reset this timer
-   * @param {*} mode "WORK" OR "BREAK"
-   */
-  reset(mode) {
+  reset (mode = this.#mode) {
+    if (mode !== MODE.WORK && mode !== MODE.BREAK) {
+      throw new RangeError('mode must be MODE.WORK or MODE.BREAK')
+    }
+
     this.pause()
-    if (mode != null) {
-      this.#mode = mode
-    }
-    switch (this.#mode) {
-      case MODE.WORK:
-        this.time = WORK_TIME
-        break
-      case MODE.BREAK:
-        this.time = BREAK_TIME
-        break
-      default:
-        throw new Error('must specify mode "WORK" or "BREAK"')
-    }
-    if (this.onReset != null) {
-      this.onReset(this.time, this.#mode)
-    }
-    if (this.autoStart) {
-      this.start()
-    }
+    this.#mode = mode
+    this.time = mode === MODE.WORK ? WORK_TIME : BREAK_TIME
+    this.onReset(this.time, this.#mode)
   }
 
-  /**
-   * tick the timer
-   */
-  #tick() {
-    this.time -= TICK
-    if (this.time < 0) {
-      this.time = 0
-    }
-    if (this.onTick != null) {
-      this.onTick(this.time, this.mode)
-    }
+  #tick () {
+    this.time = Math.max(0, this.time - TICK)
+    this.onTick(this.time, this.mode)
     if (this.time === 0) {
       this.pause()
-      if (this.onFinish != null) {
-        this.onFinish(this.time, this.mode)
-      }
+      this.onFinish(this.time, this.mode)
     }
   }
 
-  get isPlaying() {
-    return this.#handler != null
+  close () {
+    this.pause()
   }
 
-  get mode() {
+  get isPlaying () {
+    return this.#handler !== undefined
+  }
+
+  get mode () {
     return this.#mode
+  }
+
+  static {
+    this.prototype[Symbol.dispose] = this.prototype.close
   }
 }
 
 export default Pomodoro
-export {
-  MODE
-}
+export { MODE }
