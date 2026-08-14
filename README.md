@@ -38,7 +38,7 @@ cd counter
 mcconfig -d -m -p esp32/m5stack -t build
 ```
 
-全30アプリケーション・全50ボード構成を直列に検証するコマンドも用意しています。同一ターゲットのビルドキャッシュを共有するため、並列実行はしません。
+全31アプリケーション・全51ボード構成を直列に検証するコマンドも用意しています。同一ターゲットのビルドキャッシュを共有するため、並列実行はしません。
 
 ```sh
 npm run build:examples
@@ -89,7 +89,10 @@ mcconfig -d -m -p esp32/m5stack
 | `unit/joystick` | Joystick UnitのI2C読み取り | M5Stack |
 | `unit/neopixel` | NeoPixel点灯 | ESP32、M5Stack、Fire、M5StickC |
 | `unit/neostrand` | NeoStrandエフェクト切り替え | M5Stack、Fire、M5StickC |
+| `unit/piano` | M5Pianoの25鍵タッチ入力、LED、音階出力 | M5Stack |
 | `unit/relay` | Relay UnitとPiu表示 | M5Stack |
+
+M5Pianoのタッチ感度は既定値5です。値を下げるほど高感度になり、`mcconfig -d -m -p esp32/m5stack pianoSensitivity=3`のように0〜15で調整できます。
 
 ## ネットワーク、ブラウザー、外部サービス
 
