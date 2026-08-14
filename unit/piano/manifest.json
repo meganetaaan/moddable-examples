@@ -1,0 +1,27 @@
+{
+  "include": [
+    "$(MODDABLE)/examples/manifest_base.json",
+    "$(MODDABLE)/examples/manifest_piu.json",
+    "$(MODDABLE)/modules/io/manifest.json",
+    "$(MODULES)/drivers/neopixel/manifest.json"
+  ],
+  "config": {
+    "startupSound": false,
+    "pianoSensitivity": 5
+  },
+  "modules": {
+    "*": [
+      "./main",
+      "./m5piano"
+    ]
+  },
+  "resources": {
+    "*-alpha": "$(MODDABLE)/examples/assets/fonts/OpenSans-Regular-24"
+  },
+  "platforms": {
+    "esp32/m5stack": {},
+    "...": {
+      "error": "M5Piano requires an M5Stack Core and M5Piano module"
+    }
+  }
+}

@@ -54,6 +54,7 @@ export const buildMatrix = [
   ['neostrand-m5stack', 'unit/neostrand', 'esp32/m5stack'],
   ['neostrand-fire', 'unit/neostrand', 'esp32/m5stack_fire'],
   ['neostrand-stick', 'unit/neostrand', 'esp32/m5stick_c'],
+  ['piano', 'unit/piano', 'esp32/m5stack'],
   ['relay', 'unit/relay', 'esp32/m5stack']
 ]
 

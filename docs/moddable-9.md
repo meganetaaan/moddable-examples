@@ -40,7 +40,7 @@ npm --prefix theremin/server test
 npm --prefix theremin/server audit --audit-level=high
 ```
 
-Moddable側は`scripts/build-examples.mjs`に30アプリケーション・50構成を明示しています。`MODDABLE`、`IDF_PATH`、`mcconfig`をセットアップしてから実行します。
+Moddable側は`scripts/build-examples.mjs`に31アプリケーション・51構成を明示しています。`MODDABLE`、`IDF_PATH`、`mcconfig`をセットアップしてから実行します。
 
 ```sh
 npm run build:examples
